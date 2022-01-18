@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "367722535106",
+    "project_id": "chatbuddy-3eda7",
+    "storage_bucket": "chatbuddy-3eda7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367722535106:android:347c0a82c6ca9a0aba035b",
+        "android_client_info": {
+          "package_name": "com.example.chat_buddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "367722535106-h4m6bb479kem3i8j8n0rumuucjvonir2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chat_buddy",
+            "certificate_hash": "67473227e3b9caff338194a4446ba2c114fbc524"
+          }
+        },
+        {
+          "client_id": "367722535106-8uh07r2rvd71tnea333mkkkhm6tgfipf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-MfofnOBoHrmq43FKWfMzwM8wGmIGfjo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "367722535106-8uh07r2rvd71tnea333mkkkhm6tgfipf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
