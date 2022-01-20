@@ -3,8 +3,8 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:flutter/material.dart';
 
-class TextInput extends StatelessWidget {
-  const TextInput({
+class MyTextInput extends StatelessWidget {
+  const MyTextInput({
     Key? key,
     required this.hintText,
     required this.icon,

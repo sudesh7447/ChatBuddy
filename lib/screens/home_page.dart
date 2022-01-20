@@ -3,7 +3,7 @@
 import 'package:chat_buddy/api/local_auth_api.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/login_screen.dart';
-import 'package:chat_buddy/services/user_info.dart';
+import 'package:chat_buddy/services/my_user_info.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

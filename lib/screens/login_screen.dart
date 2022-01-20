@@ -2,15 +2,13 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
-import 'package:chat_buddy/screens/home_page.dart';
 import 'package:chat_buddy/screens/register_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:chat_buddy/widgets/my_button.dart';
-import 'package:chat_buddy/widgets/text_input.dart';
+import 'package:chat_buddy/widgets/my_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -92,13 +90,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                           SizedBox(height: 30),
-                          TextInput(
+                          MyTextInput(
                             hintText: 'Email id',
                             icon: Icons.email,
                             controller: emailController,
                             validator: emailValidator,
                           ),
-                          TextInput(
+                          MyTextInput(
                             hintText: 'Password',
                             icon: Icons.lock,
                             controller: passwordController,

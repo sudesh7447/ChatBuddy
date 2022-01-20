@@ -33,8 +33,9 @@ class GetUserData extends StatelessWidget {
             UserModel.username = data['Info']['username'].toString();
             UserModel.email = data['Info']['email'].toString();
             UserModel.password = data['Info']['password'].toString();
-            // UserModel.imageUrl = data['Info']['imageUrl'].toString();
-            // UserModel.bio = data['Info']['bio'].toString();
+            UserModel.imageUrl = data['Info']['imageUrl'].toString();
+            UserModel.bio = data['Info']['bio'].toString();
+            UserModel.dob = data['Info']['dob'].toString();
 
             return HomePage();
           }

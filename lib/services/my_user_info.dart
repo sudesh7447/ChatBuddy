@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UserInfo {
+class MyUserInfo {
   //Store User Details
   Future<void> storeUserDetails(username, email, password) async {
     final CollectionReference userCollection =
@@ -28,8 +28,7 @@ class UserInfo {
   }
 
   // Update UserDetails
-  Future<void> updateUserDetails(
-      username, email, password, imageUrl, bio) async {
+  Future<void> updateUserDetails(fullName, imageUrl, bio, dob) async {
     final CollectionReference userCollection =
         FirebaseFirestore.instance.collection('users');
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -39,11 +38,10 @@ class UserInfo {
         .doc(uid)
         .set({
           "Info": {
-            "username": username,
-            "email": email,
-            "password": password,
+            "fullName": fullName,
             "imageUrl": imageUrl,
             "bio": bio,
+            "dob": dob,
           }
         }, SetOptions(merge: true))
         .then((value) => print("User Details Updated"))

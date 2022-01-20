@@ -2,6 +2,7 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/screens/login_screen.dart';
+import 'package:chat_buddy/screens/profile_setup_screen.dart';
 import 'package:chat_buddy/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(primaryColor: kGreenShadeColor),
       title: 'ChatBuddy',
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }

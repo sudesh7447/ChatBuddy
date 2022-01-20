@@ -6,6 +6,12 @@ final userNameValidator =
 final passwordRequireValidator =
     MultiValidator([RequiredValidator(errorText: 'Password is required')]);
 
+final fullNameValidator =
+    MultiValidator([RequiredValidator(errorText: 'Name is required')]);
+
+final bioValidator =
+    MultiValidator([RequiredValidator(errorText: 'Name is required')]);
+
 final emailValidator = MultiValidator([
   RequiredValidator(errorText: 'Email is required'),
   EmailValidator(errorText: 'Enter a valid email address')

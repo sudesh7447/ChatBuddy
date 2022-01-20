@@ -4,5 +4,5 @@ class UserModel {
   static String? imageUrl;
   static String? bio;
   static String? password;
-// static String? ;
+  static String? dob;
 }

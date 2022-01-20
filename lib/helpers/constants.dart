@@ -5,6 +5,7 @@ const kHeroTag = 'logo';
 
 const Color kGreenShadeColor = Color(0xff05C764);
 const Color kBlueShadeColor = Color(0xff0f090a);
+const Color kLightBlueShadeColor = Color(0xff60EEFB);
 
 var kTextFormFieldAuthDec = InputDecoration(
   contentPadding: EdgeInsets.only(top: 18, bottom: 18),
