@@ -2,41 +2,49 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
-import 'package:chat_buddy/screens/home_page.dart';
-import 'package:chat_buddy/screens/register_screen.dart';
+import 'package:chat_buddy/screens/login_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
+import 'package:chat_buddy/services/user_info.dart';
 import 'package:chat_buddy/widgets/my_button.dart';
 import 'package:chat_buddy/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:form_field_validator/form_field_validator.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+import 'home_page.dart';
+
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formFieldKey = GlobalKey();
 
+  late TextEditingController usernameController;
   late TextEditingController emailController;
   late TextEditingController passwordController;
+  late TextEditingController cPasswordController;
 
   @override
   void initState() {
     super.initState();
+    usernameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
+    cPasswordController = TextEditingController();
   }
 
   @override
   void dispose() {
+    usernameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
+    cPasswordController = TextEditingController();
     super.dispose();
   }
 
@@ -48,6 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return SafeArea(
       child: ModalProgressHUD(
+        progressIndicator: CircularProgressIndicator(
+          color: Colors.white,
+        ),
         inAsyncCall: showSpinner,
         child: Scaffold(
           backgroundColor: kBlueShadeColor,
@@ -81,17 +92,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       key: _formFieldKey,
                       child: Column(
                         children: [
-                          SizedBox(height: size.height * 0.15),
+                          SizedBox(height: size.height * 0.08),
                           Text(
-                            'Sign In',
+                            'Sign Up',
                             style: TextStyle(color: Colors.white, fontSize: 28),
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'Log in using your existing register email id.',
+                            'Create new account on ChatBuddy',
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                           SizedBox(height: 30),
+                          TextInput(
+                            hintText: 'Username',
+                            icon: FontAwesomeIcons.solidUserCircle,
+                            controller: usernameController,
+                            validator: userNameValidator,
+                          ),
                           TextInput(
                             hintText: 'Email id',
                             icon: Icons.email,
@@ -102,28 +119,39 @@ class _LoginScreenState extends State<LoginScreen> {
                             hintText: 'Password',
                             icon: Icons.lock,
                             controller: passwordController,
-                            validator: passwordRequireValidator,
+                            validator: passwordValidator,
                           ),
-                          SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 32),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Fluttertoast.showToast(
-                                        msg: 'Reset Your password');
-                                  },
-                                  child: Text(
-                                    'Forget Password',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                          TextInput(
+                            hintText: 'Confirm Password',
+                            icon: Icons.lock,
+                            controller: cPasswordController,
+                            validator: (value) {
+                              if (value != passwordController.text) {
+                                return "Confirm password and password doesn't match";
+                              }
+                            },
+                          ),
+                          SizedBox(height: size.height * 0.03),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'By signing up you agree to our ',
+                                style: TextStyle(color: Colors.grey.shade600),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Fluttertoast.showToast(
+                                      msg: 'Terms and Conditions of ChatBuddy');
+                                },
+                                child: Text(
+                                  'Terms of use',
+                                  style: TextStyle(color: kGreenShadeColor),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: size.height * 0.07),
+                          SizedBox(height: size.height * 0.03),
                           InkWell(
                               onTap: () async {
                                 if (_formFieldKey.currentState!.validate()) {
@@ -131,11 +159,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                     showSpinner = true;
                                   });
                                   await AuthHelper()
-                                      .signIn(
+                                      .signUp(
                                           email: emailController.text,
                                           password: passwordController.text)
-                                      .then((result) {
+                                      .then((result) async {
                                     if (result == null) {
+                                      await UserInfo().storeUserDetails(
+                                          usernameController.text,
+                                          emailController.text,
+                                          passwordController.text);
+
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
@@ -154,25 +187,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                   });
                                 }
                               },
-                              child: MyButton(text: 'SIGN IN')),
-                          SizedBox(height: size.height * 0.1),
+                              child: MyButton(text: 'SIGN UP')),
+                          SizedBox(height: size.height * 0.08),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Don't have any account?",
+                                "Already have an account?",
                                 style: TextStyle(color: Colors.grey.shade600),
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              RegisterScreen()));
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginScreen(),
+                                    ),
+                                  );
                                 },
                                 child: Text(
-                                  ' SIGN UP',
+                                  ' SIGN IN',
                                   style: TextStyle(color: kGreenShadeColor),
                                 ),
                               ),
