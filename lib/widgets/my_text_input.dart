@@ -10,12 +10,14 @@ class MyTextInput extends StatelessWidget {
     required this.icon,
     required this.controller,
     required this.validator,
+    this.textInputAction = TextInputAction.next,
   }) : super(key: key);
 
   final String hintText;
   final IconData icon;
   final TextEditingController controller;
   final FormFieldValidator validator;
+  final TextInputAction textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class MyTextInput extends StatelessWidget {
               prefixIconColor: Colors.red,
               errorStyle: TextStyle(color: kGreenShadeColor),
             ),
+            textInputAction: textInputAction,
             cursorColor: Colors.grey.shade200,
             controller: controller,
             onSaved: (value) {

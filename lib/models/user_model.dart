@@ -5,4 +5,5 @@ class UserModel {
   static String? bio;
   static String? password;
   static String? dob;
+  static String? fullName;
 }

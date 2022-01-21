@@ -388,11 +388,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   Future pickDate(BuildContext context) async {
     final initialDate = DateTime.now();
-    final newDate = await showDatePicker(
+    final DateTime? newDate = await showDatePicker(
       context: context,
       initialDate: initialDate,
-      firstDate: DateTime(DateTime.now().year - 100),
-      lastDate: DateTime(DateTime.now().year + 100),
+      firstDate: DateTime(1900, 1, 1),
+      lastDate: DateTime.now(),
     );
 
     if (newDate == null) return;

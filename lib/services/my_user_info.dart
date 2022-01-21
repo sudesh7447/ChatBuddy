@@ -19,6 +19,10 @@ class MyUserInfo {
             "password": password,
             "uid": uid,
             "isAdmin": false,
+            "fullName": '',
+            "imageUrl": '',
+            "bio": '',
+            "dob": '',
           }
         }, SetOptions(merge: true))
         .then((value) => print("User Details Added"))

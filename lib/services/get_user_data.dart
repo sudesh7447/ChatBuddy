@@ -2,6 +2,7 @@
 
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/home_page.dart';
+import 'package:chat_buddy/screens/profile_setup_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,11 +34,12 @@ class GetUserData extends StatelessWidget {
             UserModel.username = data['Info']['username'].toString();
             UserModel.email = data['Info']['email'].toString();
             UserModel.password = data['Info']['password'].toString();
+            UserModel.fullName = data['Info']['fullName'].toString();
             UserModel.imageUrl = data['Info']['imageUrl'].toString();
             UserModel.bio = data['Info']['bio'].toString();
             UserModel.dob = data['Info']['dob'].toString();
 
-            return HomePage();
+            return UserModel.fullName == '' ? ProfileSetupScreen() : HomePage();
           }
           return Center(child: CircularProgressIndicator());
         },

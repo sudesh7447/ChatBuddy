@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/screens/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,5 +47,32 @@ class AuthHelper {
         context,
         MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
         (route) => false);
+  }
+
+  Future verifyEmail({required context}) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+      await user.sendEmailVerification();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: kGreenShadeColor,
+          content: Text(
+            'Verification email has been sent',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            e.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      );
+    }
   }
 }

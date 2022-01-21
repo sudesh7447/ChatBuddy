@@ -3,10 +3,13 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
 import 'package:chat_buddy/screens/register_screen.dart';
+import 'package:chat_buddy/screens/reset_password_screen.dart';
+import 'package:chat_buddy/screens/verify_user_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:chat_buddy/widgets/my_button.dart';
 import 'package:chat_buddy/widgets/my_text_input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -101,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             icon: Icons.lock,
                             controller: passwordController,
                             validator: passwordRequireValidator,
+                            textInputAction: TextInputAction.done,
                           ),
                           SizedBox(height: 10),
                           Padding(
@@ -109,9 +113,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 InkWell(
-                                  onTap: () {
-                                    Fluttertoast.showToast(
-                                        msg: 'Reset Your password');
+                                  onTap: () async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ResetPasswordScreen(),
+                                      ),
+                                    );
                                   },
                                   child: Text(
                                     'Forget Password',
@@ -125,6 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           InkWell(
                               onTap: () async {
                                 if (_formFieldKey.currentState!.validate()) {
+                                  FocusScope.of(context).unfocus();
+
                                   setState(() {
                                     showSpinner = true;
                                   });
@@ -137,7 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => GetUserData(),
+                                          builder: (context) =>
+                                              VerifyUserScreen(),
                                         ),
                                       );
                                     } else {
