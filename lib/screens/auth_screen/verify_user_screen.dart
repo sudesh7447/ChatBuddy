@@ -2,7 +2,7 @@
 
 import 'dart:async';
 import 'package:chat_buddy/helpers/constants.dart';
-import 'package:chat_buddy/screens/profile_setup_screen.dart';
+import 'package:chat_buddy/screens/auth_screen/profile_setup_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';

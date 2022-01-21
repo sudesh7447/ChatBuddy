@@ -2,8 +2,8 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
-import 'package:chat_buddy/screens/login_screen.dart';
-import 'package:chat_buddy/screens/verify_user_screen.dart';
+import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
+import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/my_user_info.dart';
 import 'package:chat_buddy/widgets/my_button.dart';
@@ -13,7 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-import 'home_page.dart';
+import '../home_page.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);

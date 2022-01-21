@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chat_buddy/helpers/constants.dart';
-import 'package:chat_buddy/screens/login_screen.dart';
+import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

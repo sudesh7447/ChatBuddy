@@ -2,9 +2,9 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
-import 'package:chat_buddy/screens/register_screen.dart';
-import 'package:chat_buddy/screens/reset_password_screen.dart';
-import 'package:chat_buddy/screens/verify_user_screen.dart';
+import 'package:chat_buddy/screens/auth_screen/register_screen.dart';
+import 'package:chat_buddy/screens/auth_screen/reset_password_screen.dart';
+import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:chat_buddy/widgets/my_button.dart';
