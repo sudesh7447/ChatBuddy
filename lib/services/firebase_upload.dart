@@ -14,3 +14,17 @@ class FirebaseUpload {
     }
   }
 }
+
+class FirebaseStorageMethods {
+  Future<void> deleteImage(imageUrl) async {
+    if (imageUrl != '') {
+      Reference reference = FirebaseStorage.instance.refFromURL(imageUrl);
+
+      print(reference.fullPath);
+
+      await reference.delete();
+
+      print('Image deleted successfully');
+    }
+  }
+}

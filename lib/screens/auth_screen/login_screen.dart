@@ -148,8 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              VerifyUserScreen(),
+                                          builder: (context) => GetUserData(),
                                         ),
                                       );
                                     } else {

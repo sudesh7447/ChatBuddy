@@ -5,6 +5,7 @@ import 'package:chat_buddy/helpers/validators.dart';
 import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
+import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:chat_buddy/services/my_user_info.dart';
 import 'package:chat_buddy/widgets/my_button.dart';
 import 'package:chat_buddy/widgets/my_text_input.dart';
@@ -173,8 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              VerifyUserScreen(),
+                                          builder: (context) => GetUserData(),
                                         ),
                                       );
                                     } else {

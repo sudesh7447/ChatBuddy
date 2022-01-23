@@ -1,11 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:chat_buddy/helpers/constants.dart';
-import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/providers/user_model_provider.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:chat_buddy/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -64,8 +65,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                       borderRadius: BorderRadius.circular(300),
                                       child: Image(
                                         image: NetworkImage(
-                                          UserModel.imageUrl.toString(),
-                                        ),
+                                            Provider.of<UserModelProvider>(
+                                                    context)
+                                                .imageUrl),
                                         width: 80,
                                         height: 80,
                                         fit: BoxFit.cover,
@@ -79,7 +81,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        UserModel.fullName.toString(),
+                                        Provider.of<UserModelProvider>(context)
+                                            .fullName,
                                         style: TextStyle(
                                           color: kGreenShadeColor,
                                           fontSize: 22,
@@ -87,7 +90,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                         ),
                                       ),
                                       Text(
-                                        UserModel.bio.toString(),
+                                        Provider.of<UserModelProvider>(context)
+                                            .bio,
                                         style: TextStyle(
                                           color: Colors.grey.shade500,
                                           fontSize: 16,
@@ -102,20 +106,20 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                         SizedBox(height: 30),
                         MyContainer1(
-                            icon: FontAwesomeIcons.userShield, text: 'Profile'),
-                        SizedBox(height: 10),
+                            icon: FontAwesomeIcons.solidUser, text: 'Account'),
+                        SizedBox(height: 15),
                         MyContainer1(
                             icon: FontAwesomeIcons.userShield, text: 'Profile'),
-                        SizedBox(height: 10),
+                        SizedBox(height: 15),
                         MyContainer1(
                             icon: FontAwesomeIcons.userShield, text: 'Profile'),
-                        SizedBox(height: 10),
+                        SizedBox(height: 15),
                         MyContainer1(
                             icon: FontAwesomeIcons.userShield, text: 'Profile'),
-                        SizedBox(height: 10),
+                        SizedBox(height: 15),
                         MyContainer1(
                             icon: FontAwesomeIcons.userShield, text: 'Profile'),
-                        SizedBox(height: 10),
+                        SizedBox(height: 15),
                         MyContainer1(
                             icon: FontAwesomeIcons.userShield, text: 'Profile'),
                       ],

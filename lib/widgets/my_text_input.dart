@@ -3,7 +3,7 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:flutter/material.dart';
 
-class MyTextInput extends StatelessWidget {
+class MyTextInput extends StatefulWidget {
   const MyTextInput({
     Key? key,
     required this.hintText,
@@ -19,6 +19,11 @@ class MyTextInput extends StatelessWidget {
   final FormFieldValidator validator;
   final TextInputAction textInputAction;
 
+  @override
+  State<MyTextInput> createState() => _MyTextInputState();
+}
+
+class _MyTextInputState extends State<MyTextInput> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -39,18 +44,19 @@ class MyTextInput extends StatelessWidget {
               fontSize: 16,
             ),
             decoration: kTextFormFieldAuthDec.copyWith(
-              hintText: hintText,
-              prefixIcon: Icon(icon, color: kGreenShadeColor),
+              hintText: widget.hintText,
+              prefixIcon: Icon(widget.icon, color: kGreenShadeColor),
               prefixIconColor: Colors.red,
               errorStyle: TextStyle(color: kGreenShadeColor),
             ),
-            textInputAction: textInputAction,
+            textInputAction: widget.textInputAction,
             cursorColor: Colors.grey.shade200,
-            controller: controller,
+            controller: widget.controller,
             onSaved: (value) {
-              controller.value = controller.value.copyWith(text: value);
+              widget.controller.value =
+                  widget.controller.value.copyWith(text: value);
             },
-            validator: validator,
+            validator: widget.validator,
           ),
         ],
       ),

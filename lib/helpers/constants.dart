@@ -18,3 +18,15 @@ var kTextFormFieldAuthDec = InputDecoration(
   disabledBorder: InputBorder.none,
   errorStyle: TextStyle(color: kGreenShadeColor),
 );
+
+var kInputDecoration = InputDecoration(
+  enabledBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: kGreenShadeColor),
+  ),
+  focusedBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: kGreenShadeColor),
+  ),
+  border: UnderlineInputBorder(
+    borderSide: BorderSide(color: kGreenShadeColor),
+  ),
+);

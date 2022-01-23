@@ -28,6 +28,8 @@ dependencies:
   image_picker: ^0.8.4+4
   path:
   curved_navigation_bar: ^1.0.1
+  provider: ^6.0.2
+  custom_full_image_screen: ^0.0.4
 
 dev_dependencies:
   flutter_test:

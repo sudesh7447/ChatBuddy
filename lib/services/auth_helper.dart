@@ -19,11 +19,12 @@ class AuthHelper {
         email: email,
         password: password,
       );
+      print('Register successfully');
+
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
-    print('Register successfully');
   }
 
   //SignIn method
@@ -32,11 +33,12 @@ class AuthHelper {
     print(password);
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      print('Login successfully');
+
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
-    print('Login successfully');
   }
 
   //SignOut Method

@@ -10,25 +10,47 @@ class MyUserInfo {
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid.toString();
 
-    userCollection
-        .doc(uid)
-        .set({
-          "Info": {
-            "username": username,
-            "email": email,
-            "password": password,
-            "uid": uid,
-            "isAdmin": false,
-            "fullName": '',
-            "imageUrl": '',
-            "bio": '',
-            "dob": '',
-          }
-        }, SetOptions(merge: true))
-        .then((value) => print("User Details Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    userCollection.doc(uid).set({
+      "Info": {
+        "username": username,
+        "email": email,
+        "password": password,
+        "uid": uid,
+        "isAdmin": false,
+        "fullName": '',
+        "imageUrl": '',
+        "bio": '',
+        "dob": '',
+        "timeStamp": Timestamp.now(),
+      }
+    }, SetOptions(merge: true)).then((value) async {
+      print("User Details Added");
+      await storeNumberOfUsers();
+    }).catchError((error) {
+      print("Failed to add user: $error");
+    });
 
     return;
+  }
+
+  // Store number of users
+  Future<void> storeNumberOfUsers() async {
+    final CollectionReference appTotalUsersCollection =
+        FirebaseFirestore.instance.collection('appTotalUsers');
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid.toString();
+
+    appTotalUsersCollection
+        .doc('countUser')
+        .set({
+          "userTrack": {
+            "count": FieldValue.increment(1),
+            "emails": {uid: auth.currentUser!.email}
+          }
+        }, SetOptions(merge: true))
+        .then((value) => print("AppTotalUser updated"))
+        .catchError((error) => print("Failed to update AppTotalUser $error"));
   }
 
   // Update UserDetails

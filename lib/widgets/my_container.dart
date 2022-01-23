@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:chat_buddy/helpers/constants.dart';
-import 'package:chat_buddy/main.dart';
+import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
+import 'package:chat_buddy/screens/update_info_bottom_sheet.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+User? user = FirebaseAuth.instance.currentUser!;
 
 class MyContainer1 extends StatelessWidget {
   const MyContainer1({Key? key, required this.text, required this.icon})
@@ -60,15 +64,15 @@ class MyContainer2 extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.mainText,
-    this.isEdited = true,
     this.onTap,
-    this.isEditOn = false,
+    this.isEditable = true,
+    this.isEmail = false,
   }) : super(key: key);
 
   final String mainText;
   final IconData icon;
-  final bool isEdited, isEditOn;
   final Function? onTap;
+  final bool isEditable, isEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -98,28 +102,101 @@ class MyContainer2 extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
-              children: [
-                isEdited
-                    ? InkWell(
-                        onTap: () {
-                          onTap!();
-                        },
-                        child: !isEditOn
-                            ? Icon(
-                                Icons.edit,
-                                color: kGreenShadeColor,
-                                size: 20,
-                              )
-                            : Icon(
-                                Icons.done,
-                                color: kGreenShadeColor,
-                                size: 20,
+            if (isEditable)
+              InkWell(
+                onTap: () {
+                  onTap!();
+                },
+                child: Icon(
+                  Icons.edit,
+                  color: kGreenShadeColor,
+                  size: 20,
+                ),
+              ),
+            if (isEmail)
+              user!.emailVerified
+                  ? InkWell(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: kGreenShadeColor,
+                            content: Text(
+                              'Email verification has been done',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        Icons.verified_user_rounded,
+                        color: kLightBlueShadeColor,
+                        size: 26,
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                          backgroundColor: Colors.grey.withOpacity(0.3),
+                          context: context,
+                          builder: (_) {
+                            return Container(
+                              alignment: Alignment.center,
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      'Please verify your email',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                VerifyUserScreen(),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        height: 40,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          color: kLightBlueShadeColor,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: Text(
+                                          'Verify',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                      )
-                    : Container()
-              ],
-            )
+                            );
+                          },
+                        );
+                      },
+                      child: Icon(
+                        Icons.verified_user_rounded,
+                        color: Colors.red,
+                        size: 26,
+                      ),
+                    ),
           ],
         ),
       ),

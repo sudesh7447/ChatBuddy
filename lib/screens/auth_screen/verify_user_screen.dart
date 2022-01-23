@@ -2,13 +2,10 @@
 
 import 'dart:async';
 import 'package:chat_buddy/helpers/constants.dart';
-import 'package:chat_buddy/screens/auth_screen/profile_setup_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-User? user = FirebaseAuth.instance.currentUser;
 
 class VerifyUserScreen extends StatefulWidget {
   const VerifyUserScreen({Key? key}) : super(key: key);
@@ -22,8 +19,12 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
   bool canResendEmail = false;
   Timer? timer;
 
+  User? user;
+
   @override
   void initState() {
+    user = FirebaseAuth.instance.currentUser;
+
     super.initState();
 
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;

@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/screens/bottom_navigation.dart';
-import 'package:chat_buddy/screens/home_page.dart';
 import 'package:chat_buddy/screens/auth_screen/profile_setup_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +16,8 @@ class GetUserData extends StatelessWidget {
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid.toString();
     String documentId = uid;
+    print(auth.currentUser?.email);
+
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     return Scaffold(
       backgroundColor: Colors.white,
@@ -40,9 +42,15 @@ class GetUserData extends StatelessWidget {
             UserModel.bio = data['Info']['bio'].toString();
             UserModel.dob = data['Info']['dob'].toString();
 
-            return UserModel.fullName == ''
-                ? ProfileSetupScreen()
-                : BottomNavigation();
+            if (auth.currentUser!.emailVerified) {
+              if (UserModel.fullName == '') {
+                return ProfileSetupScreen();
+              } else {
+                return BottomNavigation();
+              }
+            } else {
+              return VerifyUserScreen();
+            }
           }
           return Center(child: CircularProgressIndicator());
         },
