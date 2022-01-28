@@ -5,10 +5,13 @@ import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/methods/get_dob.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/providers/user_model_provider.dart';
+import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
 import 'package:chat_buddy/screens/update_info_bottom_sheet.dart';
+import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
 import 'package:chat_buddy/services/my_user_info.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
+import 'package:chat_buddy/widgets/my_button.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -74,14 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: kBlueShadeColor,
         appBar: AppBar(
           backgroundColor: kBlueShadeColor,
-          title: Text(
-            'Profile',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 26,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          title: Text('Profile', style: kSettingComponentAppBarTextStyle),
         ),
         body: Center(
           child: Padding(
@@ -97,9 +93,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Hero(
                             tag: kHeroTag1,
                             child: ImageViewer(
-                                urlDownload:
-                                    Provider.of<UserModelProvider>(context)
-                                        .imageUrl),
+                              urlDownload:
+                                  Provider.of<UserModelProvider>(context)
+                                      .imageUrl,
+                              finalWidth: MediaQuery.of(context).size.width,
+                              finalHeight: 500,
+                            ),
                           ),
                           Positioned(
                             right: 5,
@@ -230,63 +229,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     isEmail: true,
                                   ),
                                   SizedBox(height: 30),
-                                  // if (isEditOn)
-                                  //   InkWell(
-                                  //     onTap: () async {
-                                  //       setState(() {
-                                  //         showSpinner = true;
-                                  //       });
-                                  //
-                                  //       await uploadImage();
-                                  //       await MyUserInfo()
-                                  //           .updateUserDetails(
-                                  //             UserModel.fullName,
-                                  //             Provider.of<UserModelProvider>(
-                                  //                     context,
-                                  //                     listen: false)
-                                  //                 .imageUrl,
-                                  //             UserModel.bio,
-                                  //             UserModel.dob,
-                                  //           )
-                                  //           .then(
-                                  //             (value) =>
-                                  //                 ScaffoldMessenger.of(context)
-                                  //                     .showSnackBar(
-                                  //               SnackBar(
-                                  //                 backgroundColor:
-                                  //                     kGreenShadeColor,
-                                  //                 content: Text(
-                                  //                   'Profile updated successfully',
-                                  //                   style: TextStyle(
-                                  //                     color: Colors.white,
-                                  //                   ),
-                                  //                 ),
-                                  //               ),
-                                  //             ),
-                                  //           );
-                                  //       setState(() {
-                                  //         showSpinner = false;
-                                  //         isEditOn = false;
-                                  //       });
-                                  //     },
-                                  //     child: showSpinner
-                                  //         ? Container(
-                                  //             alignment: Alignment.center,
-                                  //             height: 54,
-                                  //             width: MediaQuery.of(context)
-                                  //                     .size
-                                  //                     .width *
-                                  //                 0.4,
-                                  //             decoration: BoxDecoration(
-                                  //               borderRadius:
-                                  //                   BorderRadius.circular(27),
-                                  //               color: kGreenShadeColor,
-                                  //             ),
-                                  //             child: CircularProgressIndicator(
-                                  //                 color: Colors.white),
-                                  //           )
-                                  //         : MyButton1(text: 'Update'),
-                                  //   ),
+                                  InkWell(
+                                      onTap: () async {
+                                        await AuthHelper().signOut(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: kGreenShadeColor,
+                                            content: Text(
+                                              'Logout Successfully',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        );
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginScreen()),
+                                                (Route<dynamic> route) =>
+                                                    false);
+                                      },
+                                      child: MyButton1(
+                                          text: 'Logout', color: Colors.red))
                                 ],
                               ),
                             ),
@@ -395,8 +361,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // Pick image
   Future getImage(ImageSource imageSource) async {
     try {
-      final image =
-          await ImagePicker().pickImage(source: imageSource, imageQuality: 50);
+      final image = await ImagePicker().pickImage(
+        source: imageSource,
+        imageQuality: 50,
+        maxHeight: 80,
+        maxWidth: 80,
+      );
 
       if (image == null) return;
 

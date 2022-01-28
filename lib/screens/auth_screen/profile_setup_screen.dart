@@ -369,7 +369,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   // Pick image
   Future getImage(ImageSource imageSource) async {
     try {
-      final image = await ImagePicker().pickImage(source: imageSource);
+      final image =
+          await ImagePicker().pickImage(source: imageSource, imageQuality: 50);
 
       if (image == null) return;
 

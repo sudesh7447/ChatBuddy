@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/providers/follower_provider.dart';
+import 'package:chat_buddy/providers/following_provider.dart';
 import 'package:chat_buddy/providers/user_model_provider.dart';
 import 'package:chat_buddy/screens/splash_screen.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
@@ -15,9 +17,16 @@ User? user = FirebaseAuth.instance.currentUser;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => UserModelProvider()),
-  ], child: const MyApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserModelProvider()),
+        ChangeNotifierProvider(create: (_) => FollowingProvider()),
+        ChangeNotifierProvider(create: (_) => FollowerProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

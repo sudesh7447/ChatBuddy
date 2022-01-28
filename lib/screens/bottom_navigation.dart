@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/screens/all_users_screen.dart';
 import 'package:chat_buddy/screens/home_page.dart';
 import 'package:chat_buddy/screens/setting_screen.dart';
+import 'package:chat_buddy/screens/users_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,12 +19,12 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
-  int _index = 4;
+  int _index = 3;
   List<Widget> screens = [
     HomePage(),
-    SettingScreen(),
-    SettingScreen(),
-    SettingScreen(),
+    HomePage(),
+    HomePage(),
+    UsersScreen(),
     SettingScreen(),
   ];
 
@@ -35,12 +37,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBody: true,
       backgroundColor: kBlueShadeColor,
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.grey.withOpacity(0.3),
         buttonBackgroundColor: Colors.transparent,
-        backgroundColor: Colors.transparent,
+        backgroundColor: kBlueShadeColor,
         key: _bottomNavigationKey,
         index: _index,
         height: 70,
@@ -61,7 +64,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             size: 32,
           ),
           Icon(
-            Icons.lock_clock,
+            FontAwesomeIcons.users,
             color: _index == 3 ? kLightBlueShadeColor : Colors.white,
             size: 32,
           ),
@@ -75,7 +78,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
           onItemTap(index);
         }),
       ),
-      body: screens[_index],
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          color: Colors.red,
+          child: screens[_index]),
     );
   }
 }

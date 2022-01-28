@@ -6,4 +6,5 @@ class UserModel {
   static String? password;
   static String? dob;
   static String? fullName;
+  static String? uid;
 }

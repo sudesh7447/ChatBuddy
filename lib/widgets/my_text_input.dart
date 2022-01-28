@@ -16,7 +16,7 @@ class MyTextInput extends StatefulWidget {
   final String hintText;
   final IconData icon;
   final TextEditingController controller;
-  final FormFieldValidator validator;
+  final FormFieldValidator? validator;
   final TextInputAction textInputAction;
 
   @override

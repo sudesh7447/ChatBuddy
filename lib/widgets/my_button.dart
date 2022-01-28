@@ -32,8 +32,15 @@ class MyButton extends StatelessWidget {
 }
 
 class MyButton1 extends StatelessWidget {
-  const MyButton1({Key? key, required this.text}) : super(key: key);
+  const MyButton1(
+      {Key? key,
+      required this.text,
+      this.borderRadius = 27,
+      this.color = kGreenShadeColor})
+      : super(key: key);
   final String text;
+  final double borderRadius;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +51,8 @@ class MyButton1 extends StatelessWidget {
       height: 54,
       width: size.width * 0.4,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(27),
-        color: kGreenShadeColor,
+        borderRadius: BorderRadius.circular(borderRadius),
+        color: color,
       ),
       child: Text(
         text,

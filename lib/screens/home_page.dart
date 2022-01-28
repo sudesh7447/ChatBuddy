@@ -24,41 +24,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: kBlueShadeColor,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(UserModel.username.toString()),
-            Text(UserModel.email.toString()),
-            Text(UserModel.password.toString()),
-            user!.emailVerified
-                ? Text('Verified')
-                : InkWell(onTap: () async {}, child: Text('Verify User')),
-            Container(
-              color: Colors.red,
-              height: 30,
-              width: 100,
-              child: Center(
-                child: InkWell(
-                  onTap: () async {
-                    AuthHelper().signOut(context);
-
-                    // final isAuthenticate = await LocalAuthApi.authenticate();
-                    //
-                    // if (isAuthenticate) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                    );
-                    // }
-                  },
-                  child: Text('Finger Print'),
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: Text('Coming Soon', style: kSettingComponentAppBarTextStyle),
       ),
     );
   }

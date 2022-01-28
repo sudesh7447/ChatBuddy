@@ -3,17 +3,20 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/screens/update_info_bottom_sheet.dart';
+import 'package:chat_buddy/widgets/image_viewer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 User? user = FirebaseAuth.instance.currentUser!;
 
 class MyContainer1 extends StatelessWidget {
-  const MyContainer1({Key? key, required this.text, required this.icon})
+  const MyContainer1(
+      {Key? key, required this.text, required this.icon, this.onTap})
       : super(key: key);
 
   final String text;
   final IconData icon;
+  final Function? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +48,15 @@ class MyContainer1 extends StatelessWidget {
             ),
             Row(
               children: [
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 20,
+                InkWell(
+                  onTap: () {
+                    onTap!();
+                  },
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 )
               ],
             )
@@ -121,7 +129,7 @@ class MyContainer2 extends StatelessWidget {
                           SnackBar(
                             backgroundColor: kGreenShadeColor,
                             content: Text(
-                              'Email verification has been done',
+                              'Email is already verified',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -197,6 +205,82 @@ class MyContainer2 extends StatelessWidget {
                         size: 26,
                       ),
                     ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyContainer3 extends StatefulWidget {
+  const MyContainer3({
+    Key? key,
+    required this.text,
+    this.onTap,
+    required this.imageUrl,
+  }) : super(key: key);
+
+  final String text, imageUrl;
+  final Function? onTap;
+
+  @override
+  State<MyContainer3> createState() => _MyContainer3State();
+}
+
+class _MyContainer3State extends State<MyContainer3> {
+  bool isFollow = false;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      alignment: Alignment.centerLeft,
+      width: size.width,
+      height: 65,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade500.withOpacity(0.3),
+        border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12, right: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            InkWell(
+              onTap: () {
+                widget.onTap!();
+              },
+              child: SizedBox(
+                width: size.width - 160,
+                child: Row(
+                  children: [
+                    ImageViewer2(
+                        width: 45, height: 45, imageUrl: widget.imageUrl),
+                    SizedBox(width: 15),
+                    Text(
+                      widget.text,
+                      style: TextStyle(color: Colors.white, fontSize: 19),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isFollow = !isFollow;
+                });
+              },
+              child: Text(
+                isFollow ? 'Following' : 'Follow',
+                style: TextStyle(
+                  color: isFollow ? kLightBlueShadeColor : kGreenShadeColor,
+                  fontSize: 16,
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/providers/user_model_provider.dart';
+import 'package:chat_buddy/screens/setting_details/account_detail_screen.dart';
+import 'package:chat_buddy/widgets/image_viewer.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
-import 'package:chat_buddy/screens/profile_screen.dart';
+import 'package:chat_buddy/screens/setting_details/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -61,17 +64,12 @@ class _SettingScreenState extends State<SettingScreen> {
                                 children: [
                                   Hero(
                                     tag: kHeroTag1,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(300),
-                                      child: Image(
-                                        image: NetworkImage(
-                                            Provider.of<UserModelProvider>(
-                                                    context)
-                                                .imageUrl),
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.cover,
-                                      ),
+                                    child: ImageViewer2(
+                                      height: 80,
+                                      width: 80,
+                                      imageUrl: Provider.of<UserModelProvider>(
+                                              context)
+                                          .imageUrl,
                                     ),
                                   ),
                                   SizedBox(width: 15),
@@ -105,8 +103,19 @@ class _SettingScreenState extends State<SettingScreen> {
                           ),
                         ),
                         SizedBox(height: 30),
-                        MyContainer1(
-                            icon: FontAwesomeIcons.solidUser, text: 'Account'),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AccountDetailScreen(),
+                              ),
+                            );
+                          },
+                          child: MyContainer1(
+                              icon: FontAwesomeIcons.solidUser,
+                              text: 'Account'),
+                        ),
                         SizedBox(height: 15),
                         MyContainer1(
                             icon: FontAwesomeIcons.userShield, text: 'Profile'),

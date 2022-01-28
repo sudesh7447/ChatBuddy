@@ -30,6 +30,7 @@ dependencies:
   curved_navigation_bar: ^1.0.1
   provider: ^6.0.2
   custom_full_image_screen: ^0.0.4
+  cached_network_image: ^3.2.0
 
 dev_dependencies:
   flutter_test:

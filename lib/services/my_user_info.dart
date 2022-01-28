@@ -21,7 +21,8 @@ class MyUserInfo {
         "imageUrl": '',
         "bio": '',
         "dob": '',
-        "timeStamp": Timestamp.now(),
+        "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
+        "createdAt": Timestamp.now(),
       }
     }, SetOptions(merge: true)).then((value) async {
       print("User Details Added");

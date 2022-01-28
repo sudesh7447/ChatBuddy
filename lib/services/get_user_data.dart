@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/screens/bottom_navigation.dart';
@@ -20,16 +21,23 @@ class GetUserData extends StatelessWidget {
 
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBlueShadeColor,
       body: FutureBuilder<DocumentSnapshot>(
         future: users.doc(documentId).get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: Text('Something went wrong, Please try again',
+                  style: kSettingComponentAppBarTextStyle),
+            );
           }
           if (snapshot.hasData && !snapshot.data!.exists) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: kGreenShadeColor,
+              ),
+            );
           }
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data =
@@ -41,6 +49,7 @@ class GetUserData extends StatelessWidget {
             UserModel.imageUrl = data['Info']['imageUrl'].toString();
             UserModel.bio = data['Info']['bio'].toString();
             UserModel.dob = data['Info']['dob'].toString();
+            UserModel.uid = data['Info']['uid'].toString();
 
             if (auth.currentUser!.emailVerified) {
               if (UserModel.fullName == '') {
@@ -52,7 +61,10 @@ class GetUserData extends StatelessWidget {
               return VerifyUserScreen();
             }
           }
-          return Center(child: CircularProgressIndicator());
+          return Center(
+              child: CircularProgressIndicator(
+            color: kGreenShadeColor,
+          ));
         },
       ),
     );
