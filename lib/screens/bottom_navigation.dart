@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/screens/chat/chat_user_screen.dart';
 import 'package:chat_buddy/screens/users_screen/all_users_screen.dart';
 import 'package:chat_buddy/screens/home_page.dart';
 import 'package:chat_buddy/screens/setting_details/setting_screen.dart';
@@ -21,12 +22,12 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
-  int _index = 3;
+  int _index = 2;
   List<Widget> screens = [
     HomePage(),
     HomePage(),
-    HomePage(),
-    GetFollowing(),
+    ChatUserScreen(),
+    UsersScreen(),
     SettingScreen(),
   ];
 

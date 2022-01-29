@@ -15,6 +15,8 @@ class GetFollowing extends StatelessWidget {
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid.toString();
 
+    print('GetFollowing');
+
     CollectionReference followerCollection =
         FirebaseFirestore.instance.collection('following');
     return Scaffold(
@@ -30,17 +32,13 @@ class GetFollowing extends StatelessWidget {
             );
           }
           if (snapshot.hasData && !snapshot.data!.exists) {
-            print('22222');
-            return Center(
-              child: CircularProgressIndicator(
-                color: kGreenShadeColor,
-              ),
-            );
+            return GetFollowers();
           }
           if (snapshot.connectionState == ConnectionState.done) {
             print('done');
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
+            print('following list');
             print(data['following']);
 
             UserModel.following = data['following'];

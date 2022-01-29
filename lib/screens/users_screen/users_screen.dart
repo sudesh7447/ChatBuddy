@@ -50,7 +50,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FollowersScreen(),
+                    builder: (context) => GetFollowers(isRequire: true),
                   ),
                 );
               },

@@ -90,12 +90,28 @@ class _FollowersScreenState extends State<FollowersScreen> {
                 } else if (snapshot.hasData) {
                   final userList = snapshot.data!.docs;
                   if (userList.isEmpty) {
-                    return Container();
+                    return Container(child: Text('Hello'));
                   } else {
+                    if (UserModel.followers.isEmpty) {
+                      return Center(
+                        child: Container(
+                          child: Text(
+                            '0 Followers',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                     return ListView.builder(
                       physics: BouncingScrollPhysics(),
                       itemCount: userList.length,
                       itemBuilder: (context, index) {
+                        print('UserModel.followers');
+                        print(UserModel.followers);
                         if (UserModel.followers
                             .contains(userList[index]['Info']['uid'])) {
                           if (resultData(userList, index, searchKey)) {

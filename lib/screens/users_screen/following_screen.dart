@@ -92,22 +92,24 @@ class _FollowersScreenState extends State<FollowingScreen> {
                   if (userList.isEmpty) {
                     return Container();
                   } else {
+                    if (UserModel.following.isEmpty) {
+                      return Center(
+                        child: Container(
+                          child: Text(
+                            '0 Following',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                     return ListView.builder(
                       physics: BouncingScrollPhysics(),
                       itemCount: userList.length,
                       itemBuilder: (context, index) {
-                        if (UserModel.following.isEmpty) {
-                          return Container(
-                            child: Text(
-                              'No following',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 28,
-                              ),
-                            ),
-                          );
-                        }
                         if (UserModel.following
                             .contains(userList[index]['Info']['uid'])) {
                           if (resultData(userList, index, searchKey)) {

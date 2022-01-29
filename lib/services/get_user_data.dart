@@ -5,6 +5,7 @@ import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/screens/bottom_navigation.dart';
 import 'package:chat_buddy/screens/auth_screen/profile_setup_screen.dart';
+import 'package:chat_buddy/services/get_following.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class GetUserData extends StatelessWidget {
     String uid = auth.currentUser!.uid.toString();
     String documentId = uid;
     print(auth.currentUser?.email);
+    print('GetUserData');
 
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     return Scaffold(
@@ -55,7 +57,7 @@ class GetUserData extends StatelessWidget {
               if (UserModel.fullName == '') {
                 return ProfileSetupScreen();
               } else {
-                return BottomNavigation();
+                return GetFollowing();
               }
             } else {
               return VerifyUserScreen();

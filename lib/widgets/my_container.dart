@@ -297,8 +297,6 @@ class _MyContainer3State extends State<MyContainer3> {
                       .addFollowing(widget.friendUid);
 
                   await FollowHelper().followerUser(widget.friendUid, context);
-                  Provider.of<FollowerProvider>(context, listen: false)
-                      .addFollower(widget.friendUid);
                 } else {
                   await FollowHelper()
                       .deleteFollowing(widget.friendUid, context);
@@ -307,8 +305,6 @@ class _MyContainer3State extends State<MyContainer3> {
 
                   await FollowHelper()
                       .deleteFollower(widget.friendUid, context);
-                  Provider.of<FollowingProvider>(context, listen: false)
-                      .deleteFollowing(widget.friendUid);
                 }
               },
               child: Text(
@@ -320,6 +316,85 @@ class _MyContainer3State extends State<MyContainer3> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyContainer4 extends StatefulWidget {
+  const MyContainer4({
+    Key? key,
+    required this.name,
+    this.onTap,
+    required this.imageUrl,
+    this.isFollowStatusRequire = false,
+    required this.lastMsg,
+  }) : super(key: key);
+
+  final String name, lastMsg, imageUrl;
+  final Function? onTap;
+  final bool isFollowStatusRequire;
+
+  @override
+  State<MyContainer4> createState() => _MyContainer4State();
+}
+
+class _MyContainer4State extends State<MyContainer4> {
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        alignment: Alignment.centerLeft,
+        width: size.width,
+        // height: 65,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey.shade500.withOpacity(0.3),
+          border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  widget.onTap!();
+                },
+                child: Row(
+                  children: [
+                    ImageViewer2(
+                        width: 45, height: 45, imageUrl: widget.imageUrl),
+                    SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.name,
+                          style: TextStyle(color: Colors.white, fontSize: 19),
+                        ),
+                        SizedBox(
+                          width: size.width * 0.6,
+                          child: Text(
+                            widget.lastMsg.substring(0, 25),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

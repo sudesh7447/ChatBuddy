@@ -3,6 +3,7 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/providers/follower_provider.dart';
 import 'package:chat_buddy/providers/following_provider.dart';
+import 'package:chat_buddy/screens/bottom_navigation.dart';
 import 'package:chat_buddy/screens/users_screen/users_screen.dart';
 import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
@@ -86,7 +87,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       onWillPop: () {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => UsersScreen()),
+            MaterialPageRoute(builder: (context) => BottomNavigation()),
             (route) => false);
         return Future.value(true);
       },
@@ -99,6 +100,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             style: kSettingComponentAppBarTextStyle,
           ),
           centerTitle: true,
+          leading: InkWell(
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => BottomNavigation()),
+                    (route) => false);
+              },
+              child: Icon(Icons.arrow_back_ios_sharp)),
         ),
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
