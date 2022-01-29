@@ -2,7 +2,8 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
-import 'package:chat_buddy/screens/user_profile_screen.dart';
+import 'package:chat_buddy/screens/users_screen/user_profile_screen.dart';
+import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,6 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
     if (name.contains(_key)) return true;
     return false;
   }
-
-  bool isFollow = false;
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +104,8 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                             child: MyContainer3(
                               imageUrl: userList[index]['Info']['imageUrl'],
                               text: userList[index]['Info']['fullName'],
+                              friendUid: userList[index]['Info']['uid'],
+                              isFollowStatusRequire: true,
                               onTap: () {
                                 Navigator.push(
                                   context,

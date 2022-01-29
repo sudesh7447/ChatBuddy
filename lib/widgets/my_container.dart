@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/providers/follower_provider.dart';
+import 'package:chat_buddy/providers/following_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/screens/update_info_bottom_sheet.dart';
+import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 User? user = FirebaseAuth.instance.currentUser!;
 
@@ -71,13 +75,13 @@ class MyContainer2 extends StatelessWidget {
   const MyContainer2({
     Key? key,
     required this.icon,
-    required this.mainText,
+    required this.text,
     this.onTap,
     this.isEditable = true,
     this.isEmail = false,
   }) : super(key: key);
 
-  final String mainText;
+  final String text;
   final IconData icon;
   final Function? onTap;
   final bool isEditable, isEmail;
@@ -89,7 +93,8 @@ class MyContainer2 extends StatelessWidget {
     return Container(
       alignment: Alignment.centerLeft,
       width: size.width,
-      height: 55,
+      // height: 55,
+      padding: EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.grey.shade500.withOpacity(0.3),
@@ -104,9 +109,14 @@ class MyContainer2 extends StatelessWidget {
               children: [
                 Icon(icon, color: kGreenShadeColor),
                 SizedBox(width: 15),
-                Text(
-                  mainText,
-                  style: TextStyle(color: Colors.white, fontSize: 19),
+                SizedBox(
+                  width: isEmail
+                      ? MediaQuery.of(context).size.width * 0.55
+                      : MediaQuery.of(context).size.width * 0.6,
+                  child: Text(
+                    text,
+                    style: TextStyle(color: Colors.white, fontSize: 19),
+                  ),
                 ),
               ],
             ),
@@ -218,20 +228,28 @@ class MyContainer3 extends StatefulWidget {
     required this.text,
     this.onTap,
     required this.imageUrl,
+    required this.friendUid,
+    this.isFollowStatusRequire = false,
   }) : super(key: key);
 
-  final String text, imageUrl;
+  final String text, imageUrl, friendUid;
   final Function? onTap;
+  final bool isFollowStatusRequire;
 
   @override
   State<MyContainer3> createState() => _MyContainer3State();
 }
 
 class _MyContainer3State extends State<MyContainer3> {
-  bool isFollow = false;
+  bool _isFollow = true;
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isFollowStatusRequire) {
+      _isFollow =
+          Provider.of<FollowerProvider>(context).isFollowing(widget.friendUid);
+    }
+
     Size size = MediaQuery.of(context).size;
 
     return Container(
@@ -268,15 +286,35 @@ class _MyContainer3State extends State<MyContainer3> {
               ),
             ),
             InkWell(
-              onTap: () {
+              onTap: () async {
                 setState(() {
-                  isFollow = !isFollow;
+                  _isFollow = !_isFollow;
                 });
+
+                if (_isFollow) {
+                  await FollowHelper().followingUser(widget.friendUid, context);
+                  Provider.of<FollowingProvider>(context, listen: false)
+                      .addFollowing(widget.friendUid);
+
+                  await FollowHelper().followerUser(widget.friendUid, context);
+                  Provider.of<FollowerProvider>(context, listen: false)
+                      .addFollower(widget.friendUid);
+                } else {
+                  await FollowHelper()
+                      .deleteFollowing(widget.friendUid, context);
+                  Provider.of<FollowingProvider>(context, listen: false)
+                      .deleteFollowing(widget.friendUid);
+
+                  await FollowHelper()
+                      .deleteFollower(widget.friendUid, context);
+                  Provider.of<FollowingProvider>(context, listen: false)
+                      .deleteFollowing(widget.friendUid);
+                }
               },
               child: Text(
-                isFollow ? 'Following' : 'Follow',
+                _isFollow ? 'Following' : 'Follow',
                 style: TextStyle(
-                  color: isFollow ? kLightBlueShadeColor : kGreenShadeColor,
+                  color: _isFollow ? kLightBlueShadeColor : kGreenShadeColor,
                   fontSize: 16,
                 ),
               ),

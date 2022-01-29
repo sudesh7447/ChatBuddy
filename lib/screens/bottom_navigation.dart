@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:chat_buddy/helpers/constants.dart';
-import 'package:chat_buddy/screens/all_users_screen.dart';
+import 'package:chat_buddy/screens/users_screen/all_users_screen.dart';
 import 'package:chat_buddy/screens/home_page.dart';
-import 'package:chat_buddy/screens/setting_screen.dart';
-import 'package:chat_buddy/screens/users_screen.dart';
+import 'package:chat_buddy/screens/setting_details/setting_screen.dart';
+import 'package:chat_buddy/screens/users_screen/following_screen.dart';
+import 'package:chat_buddy/screens/users_screen/users_screen.dart';
+import 'package:chat_buddy/services/get_following.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +26,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     HomePage(),
     HomePage(),
     HomePage(),
-    UsersScreen(),
+    GetFollowing(),
     SettingScreen(),
   ];
 
@@ -80,7 +82,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       body: Container(
           height: MediaQuery.of(context).size.height,
-          color: Colors.red,
+          color: Colors.black,
           child: screens[_index]),
     );
   }

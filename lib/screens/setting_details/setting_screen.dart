@@ -87,12 +87,18 @@ class _SettingScreenState extends State<SettingScreen> {
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      Text(
-                                        Provider.of<UserModelProvider>(context)
-                                            .bio,
-                                        style: TextStyle(
-                                          color: Colors.grey.shade500,
-                                          fontSize: 16,
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        child: Text(
+                                          Provider.of<UserModelProvider>(
+                                                  context)
+                                              .bio,
+                                          style: TextStyle(
+                                            color: Colors.grey.shade500,
+                                            fontSize: 16,
+                                          ),
                                         ),
                                       ),
                                     ],

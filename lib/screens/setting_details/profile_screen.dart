@@ -144,7 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SubName(subName: 'Name'),
                                   MyContainer2(
                                     icon: FontAwesomeIcons.user,
-                                    mainText:
+                                    text:
                                         Provider.of<UserModelProvider>(context)
                                             .fullName,
                                     onTap: () {
@@ -175,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SubName(subName: 'Bio'),
                                   MyContainer2(
                                     icon: FontAwesomeIcons.handPeace,
-                                    mainText:
+                                    text:
                                         Provider.of<UserModelProvider>(context)
                                             .bio,
                                     onTap: () {
@@ -206,7 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SubName(subName: 'Date of Birth'),
                                   MyContainer2(
                                     icon: FontAwesomeIcons.calendarAlt,
-                                    mainText: DOB().getDOB(date),
+                                    text: DOB().getDOB(date),
                                     onTap: () async {
                                       await pickDate(context);
 
@@ -224,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SubName(subName: 'Email'),
                                   MyContainer2(
                                     icon: Icons.email,
-                                    mainText: UserModel.email.toString(),
+                                    text: UserModel.email.toString(),
                                     isEditable: false,
                                     isEmail: true,
                                   ),
@@ -361,12 +361,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // Pick image
   Future getImage(ImageSource imageSource) async {
     try {
-      final image = await ImagePicker().pickImage(
-        source: imageSource,
-        imageQuality: 50,
-        maxHeight: 80,
-        maxWidth: 80,
-      );
+      final image =
+          await ImagePicker().pickImage(source: imageSource, imageQuality: 50);
 
       if (image == null) return;
 

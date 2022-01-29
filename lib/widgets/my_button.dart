@@ -32,12 +32,12 @@ class MyButton extends StatelessWidget {
 }
 
 class MyButton1 extends StatelessWidget {
-  const MyButton1(
-      {Key? key,
-      required this.text,
-      this.borderRadius = 27,
-      this.color = kGreenShadeColor})
-      : super(key: key);
+  const MyButton1({
+    Key? key,
+    required this.text,
+    this.borderRadius = 27,
+    this.color = kGreenShadeColor,
+  }) : super(key: key);
   final String text;
   final double borderRadius;
   final Color color;

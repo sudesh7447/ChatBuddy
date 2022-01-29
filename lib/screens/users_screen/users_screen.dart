@@ -1,7 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:chat_buddy/helpers/constants.dart';
-import 'package:chat_buddy/screens/all_users_screen.dart';
+import 'package:chat_buddy/screens/users_screen/all_users_screen.dart';
+import 'package:chat_buddy/screens/users_screen/followers_screen.dart';
+import 'package:chat_buddy/screens/users_screen/following_screen.dart';
+import 'package:chat_buddy/services/get_followers.dart';
+import 'package:chat_buddy/services/get_following.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,7 +50,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AllUsersScreen(),
+                    builder: (context) => FollowersScreen(),
                   ),
                 );
               },
@@ -61,7 +65,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AllUsersScreen(),
+                    builder: (context) => FollowingScreen(),
                   ),
                 );
               },

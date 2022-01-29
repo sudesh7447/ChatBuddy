@@ -7,4 +7,6 @@ class UserModel {
   static String? dob;
   static String? fullName;
   static String? uid;
+  static List<dynamic> followers = [];
+  static List<dynamic> following = [];
 }

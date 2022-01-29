@@ -1,18 +1,22 @@
+import 'package:chat_buddy/models/user_model.dart';
 import 'package:flutter/foundation.dart';
 
 class FollowerProvider extends ChangeNotifier {
-  final List _followers = [];
+  List get followers => UserModel.followers;
+  int get followerLength => UserModel.followers.length;
 
-  List get followers => _followers;
+  bool isFollowing(uid) {
+    return UserModel.following.contains(uid);
+  }
 
   void addFollower(uid) {
-    _followers.add(uid);
+    UserModel.followers.add(uid);
 
     notifyListeners();
   }
 
   void deleteFollower(uid) {
-    _followers.removeWhere((element) => element == uid);
+    UserModel.followers.removeWhere((element) => element == uid);
 
     notifyListeners();
   }
