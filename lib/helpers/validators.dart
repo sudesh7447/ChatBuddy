@@ -6,6 +6,9 @@ final userNameValidator =
 final passwordRequireValidator =
     MultiValidator([RequiredValidator(errorText: 'Password is required')]);
 
+final messageRequireValidator =
+    MultiValidator([RequiredValidator(errorText: 'Nothing to send')]);
+
 final fullNameValidator =
     MultiValidator([RequiredValidator(errorText: 'Name is required')]);
 

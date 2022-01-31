@@ -400,3 +400,68 @@ class _MyContainer4State extends State<MyContainer4> {
     );
   }
 }
+
+class MyChatContainer extends StatefulWidget {
+  const MyChatContainer(
+      {Key? key,
+      required this.text,
+      this.onTap,
+      required this.imageUrl,
+      required this.friendUid})
+      : super(key: key);
+
+  final String text, imageUrl, friendUid;
+  final Function? onTap;
+
+  @override
+  State<MyChatContainer> createState() => _MyChatContainerState();
+}
+
+class _MyChatContainerState extends State<MyChatContainer> {
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return InkWell(
+      onTap: () {
+        widget.onTap!();
+      },
+      child: Container(
+        alignment: Alignment.centerLeft,
+        width: size.width,
+        height: 65,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey.shade500.withOpacity(0.3),
+          border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: size.width - 160,
+                child: Row(
+                  children: [
+                    ImageViewer2(
+                        width: 45, height: 45, imageUrl: widget.imageUrl),
+                    SizedBox(width: 15),
+                    Text(
+                      widget.text,
+                      style: TextStyle(color: Colors.white, fontSize: 19),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.message_outlined,
+                color: kLightBlueShadeColor,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

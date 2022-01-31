@@ -63,3 +63,79 @@ class _MyTextInputState extends State<MyTextInput> {
     );
   }
 }
+
+class MyTextInputChat extends StatefulWidget {
+  const MyTextInputChat({
+    Key? key,
+    required this.hintText,
+    required this.icon,
+    required this.controller,
+    this.onImage,
+    this.onSend,
+  }) : super(key: key);
+
+  final String hintText;
+  final IconData icon;
+  final TextEditingController controller;
+  final Function? onImage, onSend;
+
+  @override
+  State<MyTextInputChat> createState() => _MyTextInputChatState();
+}
+
+class _MyTextInputChatState extends State<MyTextInputChat> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Stack(
+        children: [
+          Container(
+            height: 54,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey.shade700.withOpacity(0.3),
+              border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+            ),
+          ),
+          TextFormField(
+            style: TextStyle(
+              color: Colors.grey.shade300,
+              fontSize: 16,
+            ),
+            decoration: kTextFormFieldAuthDec.copyWith(
+              hintText: widget.hintText,
+              prefixIcon: InkWell(
+                  onTap: () {
+                    widget.onImage!();
+                  },
+                  child: Icon(widget.icon, color: kGreenShadeColor)),
+              prefixIconColor: Colors.red,
+              suffixIcon: InkWell(
+                onTap: () {
+                  widget.onSend!();
+                },
+                child: Icon(
+                  Icons.send,
+                  color: kGreenShadeColor,
+                  size: 30,
+                ),
+              ),
+              errorStyle: TextStyle(color: kGreenShadeColor),
+              hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+            ),
+            textInputAction: TextInputAction.done,
+            // maxLines: null,
+            // expands: true,
+            cursorColor: Colors.grey.shade200,
+            controller: widget.controller,
+            onSaved: (value) {
+              widget.controller.value =
+                  widget.controller.value.copyWith(text: value);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}

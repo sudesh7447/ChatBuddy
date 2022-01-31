@@ -49,6 +49,50 @@ class ImageViewer extends StatelessWidget {
   }
 }
 
+class ImageViewer1 extends StatelessWidget {
+  const ImageViewer1({
+    Key? key,
+    required this.urlDownload,
+    this.width = 150,
+    this.height = 150,
+    required this.finalWidth,
+    required this.finalHeight,
+  }) : super(key: key);
+
+  final String urlDownload;
+  final double width, height;
+  final double finalHeight, finalWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return ImageCachedFullscreen(
+      imageUrl: urlDownload,
+      imageBorderRadius: 20,
+      imageWidth: width,
+      imageHeight: height,
+      imageDetailsHeight: finalHeight,
+      imageDetailsWidth: finalWidth,
+      // iconBackButtonColor: kGreenShadeColor,
+      // hideBackButtonDetails: false,
+      backgroundColorDetails: kBlueShadeColor,
+      imageDetailsFit: BoxFit.cover,
+      // hideAppBarDetails: true,
+      imageFit: BoxFit.fill,
+      withHeroAnimation: false,
+      placeholderDetails: CircularProgressIndicator(color: kGreenShadeColor),
+      placeholder: CircularProgressIndicator(color: kGreenShadeColor),
+      errorWidget: urlDownload == ''
+          ? CircularProgressIndicator(color: kGreenShadeColor)
+          : Center(
+              child: Text(
+                'Image corrupted',
+                style: TextStyle(color: Colors.red, fontSize: 32),
+              ),
+            ),
+    );
+  }
+}
+
 class ImageViewer2 extends StatelessWidget {
   const ImageViewer2({
     Key? key,

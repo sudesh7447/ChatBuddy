@@ -2,6 +2,7 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/screens/chat/select_chat.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +33,21 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 70.0),
+        child: FloatingActionButton(
+          backgroundColor: kLightBlueShadeColor,
+          child: Icon(Icons.message, size: 26),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SelectChatScreen(),
+              ),
+            );
+          },
+        ),
+      ),
       backgroundColor: kBlueShadeColor,
       appBar: AppBar(
         backgroundColor: kBlueShadeColor,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 const kHeroTag = 'logo';
 const kHeroTag1 = 'dp';
 const kHeroTag2 = 'allUsers';
+const kChatHero = 'kChatHero';
 
 const Color kGreenShadeColor = Color(0xff05C764);
 const Color kBlueShadeColor = Color(0xff0f090a);
