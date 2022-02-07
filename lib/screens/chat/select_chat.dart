@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/methods/generate_uid.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/chat/chat_screen.dart';
-import 'package:chat_buddy/screens/users_screen/user_profile_screen.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +16,13 @@ class SelectChatScreen extends StatefulWidget {
 }
 
 class _FollowersScreenState extends State<SelectChatScreen> {
+  CollectionReference chatCollection =
+      FirebaseFirestore.instance.collection('chats');
+
+  String lastMessage = '';
   String searchKey = '';
 
   bool resultData(List arr, int index, String _key) {
-    print(UserModel.uid);
-
     if (arr[index]['Info']['uid'] == UserModel.uid) return false;
 
     String name = arr[index]['Info']['fullName'];
@@ -86,27 +88,33 @@ class _FollowersScreenState extends State<SelectChatScreen> {
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                      child:
-                          CircularProgressIndicator(color: kGreenShadeColor));
+                    child: CircularProgressIndicator(color: kGreenShadeColor),
+                  );
                 } else if (snapshot.hasData) {
                   final userList = snapshot.data!.docs;
                   if (userList.isEmpty) {
-                    return Container();
+                    return Text(
+                      "You don't follow any user.",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
                   } else {
                     if (UserModel.following.isEmpty) {
                       return Center(
-                        child: Container(
-                          child: Text(
-                            "You don't follow any user",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28,
-                            ),
+                        child: Text(
+                          "You don't follow any user",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28,
                           ),
                         ),
                       );
                     }
+
                     return ListView.builder(
                       physics: BouncingScrollPhysics(),
                       itemCount: userList.length,
@@ -114,27 +122,61 @@ class _FollowersScreenState extends State<SelectChatScreen> {
                         if (UserModel.following
                             .contains(userList[index]['Info']['uid'])) {
                           if (resultData(userList, index, searchKey)) {
+                            String fUid =
+                                userList[index]['Info']['uid'].toString();
+
+                            String _newUid = GenerateUid()
+                                .newUid(UserModel.uid.toString(), fUid);
+
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 24, vertical: 12),
-                              child: MyChatContainer(
-                                imageUrl: userList[index]['Info']['imageUrl'],
-                                text: userList[index]['Info']['fullName'],
-                                friendUid: userList[index]['Info']['uid'],
-                                onTap: () {
-                                  // Todo go to personal chat
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatScreen(
-                                        uid: userList[index]['Info']['uid'],
-                                        imageUrl: userList[index]['Info']
-                                            ['imageUrl'],
-                                        fullName: userList[index]['Info']
-                                            ['fullName'],
+                              child: FutureBuilder<QuerySnapshot>(
+                                future: chatCollection
+                                    .doc(_newUid)
+                                    .collection('messages')
+                                    .orderBy('sendAt', descending: true)
+                                    .get(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.hasError) {
+                                    Center(
+                                      child: Text(
+                                        'Something went wrong',
+                                        style: TextStyle(color: Colors.white),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
+                                  if (snapshot.hasData) {
+                                    return MyChatContainer(
+                                      imageUrl: userList[index]['Info']
+                                          ['imageUrl'],
+                                      name: userList[index]['Info']['fullName'],
+                                      friendUid: userList[index]['Info']['uid'],
+                                      lastMsg: snapshot.data!.docs.isNotEmpty
+                                          ? (snapshot.data!.docs[0]['isMsg']
+                                              ? snapshot.data!.docs[0]['msg']
+                                              : "Photo")
+                                          : '',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ChatScreen(
+                                              friendUid: userList[index]['Info']
+                                                  ['uid'],
+                                              imageUrl: userList[index]['Info']
+                                                  ['imageUrl'],
+                                              fullName: userList[index]['Info']
+                                                  ['fullName'],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+
+                                  return Container();
                                 },
                               ),
                             );

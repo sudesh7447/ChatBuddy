@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/screens/chat/select_chat.dart';
 import 'package:chat_buddy/screens/users_screen/user_profile_screen.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,12 @@ class ChatScreenAppBar extends StatelessWidget {
           children: [
             InkWell(
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectChatScreen(),
+                    ),
+                  );
                 },
                 child: Icon(Icons.arrow_back_ios_sharp, color: Colors.white)),
             SizedBox(width: 15),

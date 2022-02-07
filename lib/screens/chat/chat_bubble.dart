@@ -1,64 +1,25 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:io';
 import 'package:chat_buddy/helpers/constants.dart';
-import 'package:chat_buddy/models/user_model.dart';
-import 'package:chat_buddy/services/firebase_upload.dart';
+import 'package:chat_buddy/services/chat_service.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     Key? key,
+    required this.message,
+    required this.isSender,
+    required this.isMsg,
+    required this.sendAt,
     required this.newUid,
-    required this.index,
-    required this.allMsg,
-    required this.image,
   }) : super(key: key);
 
-  final String newUid;
-  final int index;
-  final List allMsg;
-  final File? image;
+  final String message, sendAt, newUid;
+  final bool isSender, isMsg;
 
   @override
   Widget build(BuildContext context) {
-    String sendTime =
-        allMsg[index]['createdAt'].toDate().toString().substring(11, 16);
-
-    String message = allMsg[index]['msg'] ?? '';
-    bool isMsg = allMsg[index]['isMsg'];
-    bool isSender = allMsg[index]['senderUid'] == UserModel.uid;
-    String createdAt = sendTime;
-
-    CollectionReference chatCollection =
-        FirebaseFirestore.instance.collection('chats');
-
-    Future deleteImage(imageUrl) async {
-      FirebaseStorageMethods().deleteImage(imageUrl);
-    }
-
-    Future<void> deleteMsg() async {
-      await chatCollection.doc(newUid).update(
-        {
-          'messages': FieldValue.arrayRemove(
-            [
-              {
-                "timeStamp": allMsg[index]['timeStamp'],
-                "createdAt": allMsg[index]['createdAt'],
-                "isMsg": allMsg[index]['isMsg'],
-                "msg": allMsg[index]['msg'],
-                "senderUid": allMsg[index]['senderUid'],
-                "newUid": allMsg[index]['newUid'],
-              }
-            ],
-          ),
-        },
-      );
-    }
-
     void showDialogBoxToDeleteMessage() {
       showDialog(
         context: context,
@@ -98,10 +59,7 @@ class ChatBubble extends StatelessWidget {
                   InkWell(
                     onTap: () async {
                       Navigator.pop(context);
-                      await deleteMsg();
-                      if (!isMsg) {
-                        await deleteImage(message);
-                      }
+                      ChatService().deleteMsg(newUid, message, isMsg);
                     },
                     child: Padding(
                       padding:
@@ -154,13 +112,13 @@ class ChatBubble extends StatelessWidget {
                               fontSize: 18,
                               color: isSender ? Colors.white : Colors.black,
                             ),
-                            createdAt: createdAt,
+                            createdAt: sendAt,
                           )
                         : BubbleImage(
                             isSender: isSender,
                             image: message,
                             color: isSender ? kGreenShadeColor : Colors.white,
-                            createdAt: createdAt,
+                            createdAt: sendAt,
                           ),
                   ),
                 ],
@@ -247,6 +205,9 @@ class BubbleImage extends StatelessWidget {
         finalWidth: size.width,
         finalHeight: size.height * 0.6,
       ),
+      // child: Image(
+      //   image: NetworkImage(image),
+      // ),
     );
   }
 }

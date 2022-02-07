@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/screens/chat/chat_screen.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
-import 'package:chat_buddy/services/send_message.dart';
+import 'package:chat_buddy/services/chat_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -45,10 +45,11 @@ class _ImageViewScreenState extends State<ImageViewScreen> {
             style: TextStyle(color: Colors.white, fontSize: 22),
           ),
           leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.arrow_back_ios, color: Colors.white)),
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back_ios, color: Colors.white),
+          ),
         ),
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -80,7 +81,7 @@ class _ImageViewScreenState extends State<ImageViewScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChatScreen(
-                                uid: widget.uid,
+                                friendUid: widget.uid,
                                 imageUrl: widget.imageUrl,
                                 fullName: widget.fullName),
                           ),
@@ -129,6 +130,6 @@ class _ImageViewScreenState extends State<ImageViewScreen> {
     final snapshot = await task!.whenComplete(() {});
     urlDownload = await snapshot.ref.getDownloadURL();
 
-    await ChatService().sendMessage(urlDownload, false, widget.newUid);
+    await ChatService().sendMessage(urlDownload, false, widget.newUid, context);
   }
 }

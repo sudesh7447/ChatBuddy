@@ -6,36 +6,46 @@ import 'dart:io';
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/methods/generate_uid.dart';
 import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/screens/bottom_navigation.dart';
 import 'package:chat_buddy/screens/chat/chat_bubble.dart';
-import 'package:chat_buddy/screens/chat/image_view_screen.dart';
+import 'package:chat_buddy/screens/chat/chat_user_screen.dart';
+import 'package:chat_buddy/screens/chat/select_chat.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
-import 'package:chat_buddy/services/send_message.dart';
+import 'package:chat_buddy/services/follow_helper.dart';
+import 'package:chat_buddy/services/chat_service.dart';
 import 'package:chat_buddy/widgets/chat_screen_app_bar.dart';
 import 'package:chat_buddy/widgets/my_text_input.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:path/path.dart' as path;
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
     Key? key,
-    required this.uid,
+    required this.friendUid,
     required this.imageUrl,
     required this.fullName,
+    this.isFromChatBuddyPage = false,
   }) : super(key: key);
 
-  final String uid, imageUrl, fullName;
+  final String friendUid, imageUrl, fullName;
+  final bool isFromChatBuddyPage;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  CollectionReference chatCollection =
+      FirebaseFirestore.instance.collection('chats');
+
   String newUid = '';
 
   late TextEditingController textEditingController;
@@ -48,124 +58,136 @@ class _ChatScreenState extends State<ChatScreen> {
   // upload task
   UploadTask? task;
 
-  String urlDownload =
-      'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg';
+  String urlDownload = '';
 
   bool showSpinner = false;
+
+  Future<void> setUids() async {
+    await chatCollection.doc(newUid).set({
+      "uid1": UserModel.uid,
+      "uid2": widget.friendUid,
+    }, SetOptions(merge: true));
+  }
 
   @override
   void initState() {
     super.initState();
     textEditingController = TextEditingController();
-    newUid =
-        GenerateUid().newUid(UserModel.uid.toString(), widget.uid.toString());
-  }
+    newUid = GenerateUid()
+        .newUid(UserModel.uid.toString(), widget.friendUid.toString());
 
-  // Send Message
-  CollectionReference chatCollection =
-      FirebaseFirestore.instance.collection('chats');
+    setUids();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBlueShadeColor,
-      body: Padding(
-        padding: const EdgeInsets.only(top: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  ChatScreenAppBar(
-                    uid: widget.uid,
-                    imageUrl: widget.imageUrl,
-                    fullName: widget.fullName,
-                  ),
-                  StreamBuilder<DocumentSnapshot<Object?>>(
-                    stream: chatCollection.doc(newUid).snapshots(),
-                    builder: (BuildContext context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text("Something went wrong"),
-                        );
-                      }
+    Size size = MediaQuery.of(context).size;
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Expanded(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: kGreenShadeColor,
-                            ),
-                          ),
-                        );
-                      }
-
-                      if (snapshot.hasData) {
-                        // dynamic data;
-
-                        Map<String, dynamic>? data =
-                            snapshot.data!.data() as Map<String, dynamic>?;
-
-                        List allMsg = [];
-                        if (data == null) {
-                          return Container(
-                            alignment: Alignment.center,
-                            child: Text('Start Chat with your friend'),
-                          );
-                        } else {
-                          allMsg = data['messages'];
-                          if (allMsg.isNotEmpty) {
-                            print(allMsg[0]['msg']);
-                          }
-
-                          // return Container();
-                          return Expanded(
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: ListView.builder(
-                                physics: BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                reverse: true,
-                                itemCount: allMsg.length,
-                                itemBuilder: (context, index) {
-                                  int i = allMsg.length - index - 1;
-
-                                  print(allMsg[i]['senderUid']);
-                                  print(UserModel.uid);
-
-                                  return ChatBubble(
-                                    newUid: newUid,
-                                    index: i,
-                                    allMsg: allMsg,
-                                    image: _image,
-                                  );
-                                },
-                              ),
-                            ),
-                          );
-                        }
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                ],
+    return ModalProgressHUD(
+      inAsyncCall: showSpinner,
+      child: WillPopScope(
+        onWillPop: () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => BottomNavigation(idx: 2),
               ),
+              (Route<dynamic> route) => false);
+
+          return Future.value(true);
+        },
+        child: Scaffold(
+          backgroundColor: kBlueShadeColor,
+          body: Padding(
+            padding: const EdgeInsets.only(top: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      ChatScreenAppBar(
+                        uid: widget.friendUid,
+                        imageUrl: widget.imageUrl,
+                        fullName: widget.fullName,
+                      ),
+                      StreamBuilder<QuerySnapshot>(
+                        stream: chatCollection
+                            .doc(newUid)
+                            .collection('messages')
+                            .orderBy('sendAt', descending: true)
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          print("snapshot");
+                          // print(snapshot.data!.docs.length);
+                          if (!snapshot.hasData) {
+                            return Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: kGreenShadeColor,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          if (snapshot.data != null && snapshot.hasData) {
+                            return Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  reverse: true,
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: snapshot.data!.docs.length,
+                                  itemBuilder: (context, index) {
+                                    Map<String, dynamic> data =
+                                        snapshot.data!.docs[index].data()
+                                            as Map<String, dynamic>;
+
+                                    String sendAt = data['sendAt']
+                                        .toDate()
+                                        .toString()
+                                        .substring(11, 16);
+
+                                    return ChatBubble(
+                                      sendAt: sendAt,
+                                      message: data['msg'],
+                                      isMsg: data['isMsg'],
+                                      isSender: data['senderUid'].toString() ==
+                                          UserModel.uid,
+                                      newUid: newUid,
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                MyTextInputChat(
+                  hintText: 'Type a message',
+                  icon: FontAwesomeIcons.camera,
+                  controller: textEditingController,
+                  onImage: () async {
+                    await buildShowModalBottomSheet(context);
+                  },
+                  onSend: () {
+                    ChatService().sendMessage(
+                        textEditingController.text, true, newUid, context);
+                    textEditingController.text = '';
+                  },
+                ),
+              ],
             ),
-            MyTextInputChat(
-              hintText: 'Type a message',
-              icon: FontAwesomeIcons.camera,
-              controller: textEditingController,
-              onImage: () async {
-                await buildShowModalBottomSheet(context);
-              },
-              onSend: () async {
-                await ChatService()
-                    .sendMessage(textEditingController.text, true, newUid);
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -251,40 +273,28 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  // Pick image
+// Pick image
   Future getImage(ImageSource imageSource) async {
     try {
       final image =
-          await ImagePicker().pickImage(source: imageSource, imageQuality: 50);
+          await ImagePicker().pickImage(source: imageSource, imageQuality: 25);
 
       if (image == null) return;
 
       final imgTemp = File(image.path);
 
+      ChatService().sendMessage('', false, newUid, context);
       setState(() {
         _image = imgTemp;
       });
-      // await uploadImage();
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ImageViewScreen(
-            path: _image!.path,
-            imageUrl: widget.imageUrl,
-            uid: widget.uid,
-            fullName: widget.fullName,
-            newUid: newUid,
-            image: _image,
-          ),
-        ),
-      );
+      await uploadImage();
+      await ChatService().updateMessage(urlDownload, newUid);
     } on PlatformException catch (e) {
       Fluttertoast.showToast(msg: 'Failed to pick image $e');
     }
   }
 
-  // Upload image
+// Upload image
   Future uploadImage() async {
     if (_image == null) return;
     final imageName = path.basename(_image!.path);
@@ -296,7 +306,5 @@ class _ChatScreenState extends State<ChatScreen> {
 
     final snapshot = await task!.whenComplete(() {});
     urlDownload = await snapshot.ref.getDownloadURL();
-
-    await ChatService().sendMessage(urlDownload, false, newUid);
   }
 }

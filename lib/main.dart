@@ -6,7 +6,6 @@ import 'package:chat_buddy/providers/following_provider.dart';
 import 'package:chat_buddy/providers/user_model_provider.dart';
 import 'package:chat_buddy/screens/splash_screen.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
-import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

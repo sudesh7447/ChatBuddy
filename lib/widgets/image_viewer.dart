@@ -79,10 +79,28 @@ class ImageViewer1 extends StatelessWidget {
       // hideAppBarDetails: true,
       imageFit: BoxFit.fill,
       withHeroAnimation: false,
-      placeholderDetails: CircularProgressIndicator(color: kGreenShadeColor),
-      placeholder: CircularProgressIndicator(color: kGreenShadeColor),
+      placeholderDetails: Transform.scale(
+        scale: 0.2,
+        child: CircularProgressIndicator(
+          color: kGreenShadeColor,
+          strokeWidth: 16,
+        ),
+      ),
+      placeholder: Transform.scale(
+        scale: 0.2,
+        child: CircularProgressIndicator(
+          color: kGreenShadeColor,
+          strokeWidth: 16,
+        ),
+      ),
       errorWidget: urlDownload == ''
-          ? CircularProgressIndicator(color: kGreenShadeColor)
+          ? Transform.scale(
+              scale: 0.2,
+              child: CircularProgressIndicator(
+                color: kGreenShadeColor,
+                strokeWidth: 16,
+              ),
+            )
           : Center(
               child: Text(
                 'Image corrupted',

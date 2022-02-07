@@ -4,9 +4,10 @@ import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/providers/follower_provider.dart';
 import 'package:chat_buddy/providers/following_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
-import 'package:chat_buddy/screens/update_info_bottom_sheet.dart';
+import 'package:chat_buddy/screens/chat/chat_screen.dart';
 import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -323,77 +324,105 @@ class _MyContainer3State extends State<MyContainer3> {
 }
 
 class MyContainer4 extends StatefulWidget {
-  const MyContainer4({
-    Key? key,
-    required this.name,
-    this.onTap,
-    required this.imageUrl,
-    this.isFollowStatusRequire = false,
-    required this.lastMsg,
-  }) : super(key: key);
+  const MyContainer4({Key? key, required this.friendUid}) : super(key: key);
 
-  final String name, lastMsg, imageUrl;
-  final Function? onTap;
-  final bool isFollowStatusRequire;
+  final String friendUid;
 
   @override
   State<MyContainer4> createState() => _MyContainer4State();
 }
 
 class _MyContainer4State extends State<MyContainer4> {
+  CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  String name = '',
+      imageUrl =
+          'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg',
+      lastMessage = 'Last message';
+
+  Future<void> getChatterData() async {
+    var _doc =
+        userCollection.doc(widget.friendUid).get().then((snapshot) async {
+      // print(snapshot.data());
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      setState(() {
+        name = data['Info']['fullName'];
+        imageUrl = data['Info']['imageUrl'];
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getChatterData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        alignment: Alignment.centerLeft,
-        width: size.width,
-        // height: 65,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.grey.shade500.withOpacity(0.3),
-          border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 12, right: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: () {
-                  widget.onTap!();
-                },
-                child: Row(
-                  children: [
-                    ImageViewer2(
-                        width: 45, height: 45, imageUrl: widget.imageUrl),
-                    SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.name,
-                          style: TextStyle(color: Colors.white, fontSize: 19),
-                        ),
-                        SizedBox(
-                          width: size.width * 0.6,
-                          child: Text(
-                            widget.lastMsg.substring(0, 25),
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(
+                friendUid: widget.friendUid,
+                imageUrl: imageUrl,
+                fullName: name,
+                isFromChatBuddyPage: true,
               ),
-            ],
+            ),
+          );
+        },
+        child: Container(
+          alignment: Alignment.centerLeft,
+          width: size.width,
+          height: 65,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey.shade500.withOpacity(0.3),
+            border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12, right: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: size.width - 160,
+                  child: Row(
+                    children: [
+                      ImageViewer2(width: 45, height: 45, imageUrl: imageUrl),
+                      SizedBox(width: 15),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: TextStyle(color: Colors.white, fontSize: 19),
+                          ),
+                          if (lastMessage != "")
+                            Text(
+                              lastMessage,
+                              style: TextStyle(color: Colors.white),
+                            )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.message_outlined,
+                  color: kLightBlueShadeColor,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -402,15 +431,16 @@ class _MyContainer4State extends State<MyContainer4> {
 }
 
 class MyChatContainer extends StatefulWidget {
-  const MyChatContainer(
-      {Key? key,
-      required this.text,
-      this.onTap,
-      required this.imageUrl,
-      required this.friendUid})
-      : super(key: key);
+  const MyChatContainer({
+    Key? key,
+    required this.name,
+    this.onTap,
+    required this.imageUrl,
+    required this.friendUid,
+    required this.lastMsg,
+  }) : super(key: key);
 
-  final String text, imageUrl, friendUid;
+  final String name, imageUrl, friendUid, lastMsg;
   final Function? onTap;
 
   @override
@@ -420,6 +450,9 @@ class MyChatContainer extends StatefulWidget {
 class _MyChatContainerState extends State<MyChatContainer> {
   @override
   Widget build(BuildContext context) {
+    String lastMsg = widget.lastMsg;
+    int lastMsgLen = widget.lastMsg.length;
+
     Size size = MediaQuery.of(context).size;
 
     return InkWell(
@@ -447,9 +480,23 @@ class _MyChatContainerState extends State<MyChatContainer> {
                     ImageViewer2(
                         width: 45, height: 45, imageUrl: widget.imageUrl),
                     SizedBox(width: 15),
-                    Text(
-                      widget.text,
-                      style: TextStyle(color: Colors.white, fontSize: 19),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.name,
+                          style: TextStyle(color: Colors.white, fontSize: 19),
+                        ),
+                        SizedBox(height: 5),
+                        if (widget.lastMsg != "")
+                          Text(
+                            lastMsgLen > 30
+                                ? lastMsg.substring(0, 20) + '...'
+                                : lastMsg,
+                            style: TextStyle(color: Colors.grey.shade400),
+                          )
+                      ],
                     ),
                   ],
                 ),
