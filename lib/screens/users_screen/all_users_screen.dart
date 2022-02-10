@@ -40,114 +40,125 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: kBlueShadeColor,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => BottomNavigation(idx: 3),
+            ),
+            (Route<dynamic> route) => false);
+
+        return Future.value(true);
+      },
+      child: Scaffold(
         backgroundColor: kBlueShadeColor,
-        title: Text('All Users', style: kSettingComponentAppBarTextStyle),
-        leading: InkWell(
-          onTap: () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => BottomNavigation(idx: 2),
-                ),
-                (Route<dynamic> route) => false);
-          },
-          child: Icon(
-            Icons.arrow_back_sharp,
-            size: 30,
+        appBar: AppBar(
+          backgroundColor: kBlueShadeColor,
+          title: Text('All Users', style: kSettingComponentAppBarTextStyle),
+          leading: InkWell(
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => BottomNavigation(idx: 3),
+                  ),
+                  (Route<dynamic> route) => false);
+            },
+            child: Icon(
+              Icons.arrow_back_sharp,
+              size: 30,
+            ),
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-            child: Stack(
-              children: [
-                Container(
-                  height: 54,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(27),
-                    color: Colors.grey.shade700.withOpacity(0.3),
-                    border: Border.all(
-                        color: Colors.grey.shade700.withOpacity(0.15)),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+              child: Stack(
+                children: [
+                  Container(
+                    height: 54,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(27),
+                      color: Colors.grey.shade700.withOpacity(0.3),
+                      border: Border.all(
+                          color: Colors.grey.shade700.withOpacity(0.15)),
+                    ),
                   ),
-                ),
-                TextFormField(
-                  style: TextStyle(
-                    color: Colors.grey.shade300,
-                    fontSize: 16,
+                  TextFormField(
+                    style: TextStyle(
+                      color: Colors.grey.shade300,
+                      fontSize: 16,
+                    ),
+                    decoration: kTextFormFieldAuthDec.copyWith(
+                      hintText: 'Search User',
+                      prefixIcon: Icon(Icons.search, color: kGreenShadeColor),
+                      prefixIconColor: Colors.red,
+                      errorStyle: TextStyle(color: kGreenShadeColor),
+                    ),
+                    textInputAction: TextInputAction.done,
+                    cursorColor: Colors.grey.shade200,
+                    onChanged: (val) {
+                      setState(() {
+                        searchKey = val;
+                      });
+                    },
                   ),
-                  decoration: kTextFormFieldAuthDec.copyWith(
-                    hintText: 'Search User',
-                    prefixIcon: Icon(Icons.search, color: kGreenShadeColor),
-                    prefixIconColor: Colors.red,
-                    errorStyle: TextStyle(color: kGreenShadeColor),
-                  ),
-                  textInputAction: TextInputAction.done,
-                  cursorColor: Colors.grey.shade200,
-                  onChanged: (val) {
-                    setState(() {
-                      searchKey = val;
-                    });
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection('users').snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                      child:
-                          CircularProgressIndicator(color: kGreenShadeColor));
-                } else if (snapshot.hasData) {
-                  final userList = snapshot.data!.docs;
-                  if (userList.isEmpty) {
-                    return Container();
-                  } else {
-                    return ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: userList.length,
-                      itemBuilder: (context, index) {
-                        if (resultData(userList, index, searchKey)) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
-                            child: MyContainer3(
-                              imageUrl: userList[index]['Info']['imageUrl'],
-                              text: userList[index]['Info']['fullName'],
-                              friendUid: userList[index]['Info']['uid'],
-                              isFollowStatusRequire: true,
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => UserProfileScreen(
-                                      userUid: userList[index]['Info']['uid'],
+            Expanded(
+              child: StreamBuilder(
+                stream:
+                    FirebaseFirestore.instance.collection('users').snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                        child:
+                            CircularProgressIndicator(color: kGreenShadeColor));
+                  } else if (snapshot.hasData) {
+                    final userList = snapshot.data!.docs;
+                    if (userList.isEmpty) {
+                      return Container();
+                    } else {
+                      return ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: userList.length,
+                        itemBuilder: (context, index) {
+                          if (resultData(userList, index, searchKey)) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                              child: MyContainer3(
+                                imageUrl: userList[index]['Info']['imageUrl'],
+                                text: userList[index]['Info']['fullName'],
+                                friendUid: userList[index]['Info']['uid'],
+                                isFollowStatusRequire: true,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UserProfileScreen(
+                                        userUid: userList[index]['Info']['uid'],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          return SizedBox();
-                        }
-                      },
-                    );
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      );
+                    }
+                  } else {
+                    return Container();
                   }
-                } else {
-                  return Container();
-                }
-              },
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

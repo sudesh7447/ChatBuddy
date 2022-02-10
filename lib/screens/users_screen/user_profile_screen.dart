@@ -4,6 +4,7 @@ import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/providers/follower_provider.dart';
 import 'package:chat_buddy/providers/following_provider.dart';
 import 'package:chat_buddy/screens/bottom_navigation.dart';
+import 'package:chat_buddy/screens/chat/chat_screen.dart';
 import 'package:chat_buddy/screens/users_screen/users_screen.dart';
 import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
@@ -25,6 +26,9 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   String imageUrl = '', fullName = '', dob = '', bio = '', email = '';
+
+  int totalFollowers = 0;
+
   Timestamp? createdAt;
 
   Future getData() async {
@@ -44,10 +48,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     });
   }
 
+  Future getFollowers() async {
+    await FirebaseFirestore.instance
+        .collection('follower')
+        .doc(widget.userUid)
+        .get()
+        .then((value) {
+      print('value.data()');
+      Map<String, dynamic> data = value.data() as Map<String, dynamic>;
+      print(data['follower']);
+      setState(() {
+        totalFollowers = data['follower'].length;
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getData();
+    getFollowers();
   }
 
   bool _isFollow = false;
@@ -109,6 +129,34 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               },
               child: Icon(Icons.arrow_back_ios_sharp)),
         ),
+        floatingActionButton: _isFollow
+            ? Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: kLightBlueShadeColor, width: 2),
+                  borderRadius: BorderRadius.circular(300),
+                ),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(
+                          friendUid: widget.userUid,
+                          imageUrl: imageUrl,
+                          fullName: fullName,
+                        ),
+                      ),
+                    );
+                  },
+                  backgroundColor: kBlueShadeColor,
+                  child: Icon(
+                    Icons.message_sharp,
+                    color: kLightBlueShadeColor,
+                    size: 30,
+                  ),
+                ),
+              )
+            : SizedBox(),
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Center(
@@ -212,7 +260,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                             SizedBox(height: 15),
                             NewRow(
-                              property: "xx Followers",
+                              property: "$totalFollowers Followers",
                               icon: FontAwesomeIcons.userPlus,
                               color: _isFollow
                                   ? kLightBlueShadeColor

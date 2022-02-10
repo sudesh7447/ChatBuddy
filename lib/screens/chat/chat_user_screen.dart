@@ -192,71 +192,15 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: StreamBuilder(
-                  stream: chatCollection.snapshots(),
+                  stream: chatCollection
+                      .orderBy('lastMsgTime', descending: true)
+                      .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 28.0, vertical: 18),
-                                child: Text(
-                                  'Start chat with your friends',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                child: Lottie.asset(
-                                    'assets/lottie/empty_chat.json'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      return NoChatWidget();
                     }
                     if (snapshot.data!.docs.isEmpty) {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 28.0, vertical: 18),
-                                child: Text(
-                                  'Start chat with your friends',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                child: Lottie.asset(
-                                    'assets/lottie/empty_chat.json'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      return NoChatWidget();
                     }
                     if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                       return ListView.builder(
@@ -350,7 +294,6 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                                             ),
                                           );
                                         }
-
                                         return Container();
                                       },
                                     );
@@ -365,11 +308,50 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                         },
                       );
                     }
-
                     return Container();
                   },
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NoChatWidget extends StatelessWidget {
+  const NoChatWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return SizedBox(
+      height: size.height * 0.7,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 28.0, vertical: 18),
+              child: Text(
+                'Start chat with your friends',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: size.height * 0.4,
+              child: Lottie.asset('assets/lottie/empty_chat.json'),
             ),
           ],
         ),

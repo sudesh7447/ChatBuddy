@@ -33,7 +33,7 @@ class ImageViewer extends StatelessWidget {
       backgroundColorDetails: kBlueShadeColor,
       imageDetailsFit: BoxFit.cover,
       // hideAppBarDetails: true,
-      imageFit: BoxFit.fill,
+      imageFit: BoxFit.cover,
       withHeroAnimation: false,
       placeholderDetails: CircularProgressIndicator(color: kGreenShadeColor),
       placeholder: CircularProgressIndicator(color: kGreenShadeColor),

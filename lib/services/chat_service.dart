@@ -25,6 +25,13 @@ class ChatService {
       },
       SetOptions(merge: true),
     );
+
+    await chatCollection.doc(newUid).set(
+      {
+        "lastMsgTime": timestamp,
+      },
+      SetOptions(merge: true),
+    );
   }
 
   Future updateMessage(String msg, newUid) async {
@@ -43,7 +50,9 @@ class ChatService {
         .doc(newUid)
         .collection('messages')
         .doc(_tempUid)
-        .update({"msg": msg});
+        .update(
+      {"msg": msg},
+    );
   }
 
   Future<void> deleteMsg(newUid, msg, isMsg) async {
