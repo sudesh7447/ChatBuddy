@@ -512,3 +512,23 @@ class _MyChatContainerState extends State<MyChatContainer> {
     );
   }
 }
+
+class MyChatSkeleton extends StatelessWidget {
+  const MyChatSkeleton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      alignment: Alignment.centerLeft,
+      width: size.width,
+      height: 65,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade500.withOpacity(0.3),
+        border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+      ),
+    );
+  }
+}

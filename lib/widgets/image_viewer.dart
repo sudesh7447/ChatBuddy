@@ -136,6 +136,7 @@ class ImageViewer2 extends StatelessWidget {
           ),
         );
       },
+      errorWidget: (context, url, error) => Icon(Icons.error),
       imageBuilder: (context, image) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(300),

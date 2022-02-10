@@ -73,6 +73,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
+      progressIndicator: CircularProgressIndicator(
+        color: kGreenShadeColor,
+      ),
       child: Scaffold(
         backgroundColor: kBlueShadeColor,
         appBar: AppBar(

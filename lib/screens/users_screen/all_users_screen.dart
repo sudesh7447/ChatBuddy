@@ -2,14 +2,18 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/screens/bottom_navigation.dart';
+import 'package:chat_buddy/screens/chat/select_chat.dart';
 import 'package:chat_buddy/screens/users_screen/user_profile_screen.dart';
-import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AllUsersScreen extends StatefulWidget {
-  const AllUsersScreen({Key? key}) : super(key: key);
+  const AllUsersScreen({Key? key, this.isSelectChatScreen = false})
+      : super(key: key);
+
+  final bool isSelectChatScreen;
 
   @override
   _AllUsersScreenState createState() => _AllUsersScreenState();
@@ -41,6 +45,19 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       appBar: AppBar(
         backgroundColor: kBlueShadeColor,
         title: Text('All Users', style: kSettingComponentAppBarTextStyle),
+        leading: InkWell(
+          onTap: () {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => BottomNavigation(idx: 2),
+                ),
+                (Route<dynamic> route) => false);
+          },
+          child: Icon(
+            Icons.arrow_back_sharp,
+            size: 30,
+          ),
+        ),
       ),
       body: Column(
         children: [

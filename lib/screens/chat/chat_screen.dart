@@ -180,8 +180,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     await buildShowModalBottomSheet(context);
                   },
                   onSend: () {
-                    ChatService().sendMessage(
-                        textEditingController.text, true, newUid, context);
+                    ChatService().sendMessage(textEditingController.text, true,
+                        newUid, widget.friendUid, context);
                     textEditingController.text = '';
                   },
                 ),
@@ -283,7 +283,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       final imgTemp = File(image.path);
 
-      ChatService().sendMessage('', false, newUid, context);
+      ChatService().sendMessage('', false, newUid, widget.friendUid, context);
       setState(() {
         _image = imgTemp;
       });

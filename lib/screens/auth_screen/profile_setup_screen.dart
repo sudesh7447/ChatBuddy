@@ -100,6 +100,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     return SafeArea(
       child: ModalProgressHUD(
         inAsyncCall: showSpinner,
+        progressIndicator: CircularProgressIndicator(
+          color: kGreenShadeColor,
+        ),
         child: WillPopScope(
           onWillPop: () async {
             await AuthHelper().signOut(context);

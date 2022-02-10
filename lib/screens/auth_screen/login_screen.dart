@@ -4,12 +4,10 @@ import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
 import 'package:chat_buddy/screens/auth_screen/register_screen.dart';
 import 'package:chat_buddy/screens/auth_screen/reset_password_screen.dart';
-import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:chat_buddy/widgets/my_button.dart';
 import 'package:chat_buddy/widgets/my_text_input.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -50,6 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: ModalProgressHUD(
         inAsyncCall: showSpinner,
+        progressIndicator: CircularProgressIndicator(
+          color: kGreenShadeColor,
+        ),
         child: Scaffold(
           backgroundColor: kBlueShadeColor,
           body: Center(

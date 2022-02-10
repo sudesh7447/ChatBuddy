@@ -38,6 +38,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
+      progressIndicator: CircularProgressIndicator(
+        color: kGreenShadeColor,
+      ),
       child: Scaffold(
         backgroundColor: kBlueShadeColor,
         appBar: AppBar(

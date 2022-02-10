@@ -33,6 +33,8 @@ dependencies:
   flutter_local_notifications: ^9.2.0
   rxdart: ^0.27.3
   firebase_messaging: ^11.2.6
+  shimmer: ^2.0.0
+  lottie: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -50,4 +52,5 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/lottie/
 

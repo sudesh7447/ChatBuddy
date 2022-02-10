@@ -7,7 +7,8 @@ class ChatService {
   CollectionReference chatCollection =
       FirebaseFirestore.instance.collection('chats');
 
-  Future sendMessage(String msg, bool isMsg, newUid, context) async {
+  Future sendMessage(
+      String msg, bool isMsg, newUid, receiverUid, context) async {
     if (msg == '' && isMsg) return;
 
     var timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
@@ -20,6 +21,7 @@ class ChatService {
         "timestamp": timestamp,
         "sendAt": DateTime.now(),
         "senderUid": UserModel.uid,
+        "receiverUid": receiverUid,
       },
       SetOptions(merge: true),
     );
