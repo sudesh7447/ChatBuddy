@@ -44,7 +44,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       onWillPop: () async {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => BottomNavigation(idx: 3),
+              builder: (context) => BottomNavigation(idx: 0),
             ),
             (Route<dynamic> route) => false);
 
@@ -59,7 +59,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
-                    builder: (context) => BottomNavigation(idx: 3),
+                    builder: (context) => BottomNavigation(idx: 0),
                   ),
                   (Route<dynamic> route) => false);
             },

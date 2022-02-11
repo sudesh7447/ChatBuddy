@@ -119,8 +119,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             );
                           },
                           child: MyContainer1(
-                              icon: FontAwesomeIcons.solidUser,
-                              text: 'Account'),
+                            icon: FontAwesomeIcons.solidUser,
+                            text: 'Account',
+                          ),
                         ),
                         SizedBox(height: 15),
                         MyContainer1(

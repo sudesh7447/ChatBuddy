@@ -107,7 +107,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       onWillPop: () {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => BottomNavigation()),
+            MaterialPageRoute(builder: (context) => BottomNavigation(idx: 0)),
             (route) => false);
         return Future.value(true);
       },
@@ -124,7 +124,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => BottomNavigation()),
+                    MaterialPageRoute(
+                        builder: (context) => BottomNavigation(idx: 0)),
                     (route) => false);
               },
               child: Icon(Icons.arrow_back_ios_sharp)),
@@ -188,6 +189,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     });
 
                     if (_isFollow) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: Duration(milliseconds: 500),
+                          backgroundColor: kLightBlueShadeColor,
+                          content: Text(
+                            'You have started following $fullName',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
                       await FollowHelper()
                           .followingUser(widget.userUid, context);
                       Provider.of<FollowingProvider>(context, listen: false)
@@ -198,6 +209,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       Provider.of<FollowerProvider>(context, listen: false)
                           .addFollower(widget.userUid);
                     } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: Duration(milliseconds: 500),
+                          backgroundColor: kGreenShadeColor,
+                          content: Text(
+                            'Unfollowed $fullName',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+
                       await FollowHelper()
                           .deleteFollowing(widget.userUid, context);
                       Provider.of<FollowingProvider>(context, listen: false)

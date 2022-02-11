@@ -89,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
         onWillPop: () {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => BottomNavigation(idx: 2),
+                builder: (context) => BottomNavigation(),
               ),
               (Route<dynamic> route) => false);
 
@@ -152,6 +152,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                         .toString()
                                         .substring(11, 16);
 
+                                    var timestamp = data['timestamp'];
+
                                     return ChatBubble(
                                       sendAt: sendAt,
                                       message: data['msg'],
@@ -159,6 +161,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       isSender: data['senderUid'].toString() ==
                                           UserModel.uid,
                                       newUid: newUid,
+                                      timestamp: timestamp,
                                     );
                                   },
                                 ),

@@ -3,14 +3,9 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/chat/chat_user_screen.dart';
-import 'package:chat_buddy/screens/users_screen/all_users_screen.dart';
-import 'package:chat_buddy/screens/home_page.dart';
 import 'package:chat_buddy/screens/setting_details/setting_screen.dart';
-import 'package:chat_buddy/screens/users_screen/following_screen.dart';
 import 'package:chat_buddy/screens/users_screen/users_screen.dart';
-import 'package:chat_buddy/services/get_following.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -26,12 +21,10 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
-  int _index = 2;
+  int _index = 1;
   List<Widget> screens = [
-    HomePage(),
-    HomePage(),
-    ChatUserScreen(),
     UsersScreen(),
+    ChatUserScreen(),
     SettingScreen(),
   ];
 
@@ -61,31 +54,21 @@ class _BottomNavigationState extends State<BottomNavigation> {
         backgroundColor: kBlueShadeColor,
         key: _bottomNavigationKey,
         index: _index,
-        height: 70,
+        height: 65,
         items: [
           Icon(
-            FontAwesomeIcons.dailymotion,
+            FontAwesomeIcons.users,
             color: _index == 0 ? kLightBlueShadeColor : Colors.white,
             size: 32,
           ),
           Icon(
-            Icons.lock_clock,
+            Icons.chat_outlined,
             color: _index == 1 ? kLightBlueShadeColor : Colors.white,
             size: 32,
           ),
           Icon(
-            Icons.chat_outlined,
-            color: _index == 2 ? kLightBlueShadeColor : Colors.white,
-            size: 32,
-          ),
-          Icon(
-            FontAwesomeIcons.users,
-            color: _index == 3 ? kLightBlueShadeColor : Colors.white,
-            size: 32,
-          ),
-          Icon(
             Icons.settings,
-            color: _index == 4 ? kLightBlueShadeColor : Colors.white,
+            color: _index == 2 ? kLightBlueShadeColor : Colors.white,
             size: 32,
           ),
         ],

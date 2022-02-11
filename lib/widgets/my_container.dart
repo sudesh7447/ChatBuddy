@@ -15,17 +15,28 @@ import 'package:provider/provider.dart';
 User? user = FirebaseAuth.instance.currentUser!;
 
 class MyContainer1 extends StatelessWidget {
-  const MyContainer1(
-      {Key? key, required this.text, required this.icon, this.onTap})
-      : super(key: key);
+  const MyContainer1({
+    Key? key,
+    required this.text,
+    required this.icon,
+    this.onTap,
+    this.totalUsers,
+  }) : super(key: key);
 
   final String text;
   final IconData icon;
   final Function? onTap;
+  final int? totalUsers;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    String tpUser = text == "Following"
+        ? "following"
+        : text == "Followers"
+            ? "followers"
+            : "Users";
 
     return Container(
       alignment: Alignment.centerLeft,
@@ -53,15 +64,9 @@ class MyContainer1 extends StatelessWidget {
             ),
             Row(
               children: [
-                InkWell(
-                  onTap: () {
-                    onTap!();
-                  },
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+                Text(
+                  "$totalUsers  $tpUser",
+                  style: TextStyle(color: Colors.white70, fontSize: 18),
                 )
               ],
             )

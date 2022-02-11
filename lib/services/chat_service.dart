@@ -1,7 +1,7 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
 
 class ChatService {
   CollectionReference chatCollection =
@@ -10,6 +10,13 @@ class ChatService {
   Future sendMessage(
       String msg, bool isMsg, newUid, receiverUid, context) async {
     if (msg == '' && isMsg) return;
+
+    AssetsAudioPlayer.defaultVolume;
+    AssetsAudioPlayer.newPlayer().open(
+      Audio("assets/audio/send.mp3"),
+      showNotification: false,
+      // volume: 0.5,
+    );
 
     var timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
 
@@ -55,7 +62,14 @@ class ChatService {
     );
   }
 
-  Future<void> deleteMsg(newUid, msg, isMsg) async {
+  Future<void> deleteMsg(newUid, msg, isMsg, timestamp) async {
+    AssetsAudioPlayer.defaultVolume;
+    AssetsAudioPlayer.newPlayer().open(
+      Audio("assets/audio/delete.mp3"),
+      showNotification: false,
+      // volume: 0.5,
+    );
+
     if (!isMsg) {
       FirebaseStorageMethods().deleteImage(msg);
     }
@@ -64,7 +78,8 @@ class ChatService {
     await chatCollection
         .doc(newUid)
         .collection('messages')
-        .where('msg', isEqualTo: msg)
+        .where('timestamp', isEqualTo: timestamp)
+        .limit(1)
         .get()
         .then((value) {
       _uid = value.docs.single.id;

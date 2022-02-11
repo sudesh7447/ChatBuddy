@@ -3,6 +3,7 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/services/chat_service.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -13,10 +14,12 @@ class ChatBubble extends StatelessWidget {
     required this.isMsg,
     required this.sendAt,
     required this.newUid,
+    required this.timestamp,
   }) : super(key: key);
 
   final String message, sendAt, newUid;
   final bool isSender, isMsg;
+  final int timestamp;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +62,8 @@ class ChatBubble extends StatelessWidget {
                   InkWell(
                     onTap: () async {
                       Navigator.pop(context);
-                      ChatService().deleteMsg(newUid, message, isMsg);
+                      ChatService()
+                          .deleteMsg(newUid, message, isMsg, timestamp);
                     },
                     child: Padding(
                       padding:

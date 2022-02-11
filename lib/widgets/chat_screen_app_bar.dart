@@ -37,7 +37,7 @@ class ChatScreenAppBar extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                        builder: (context) => BottomNavigation(idx: 2),
+                        builder: (context) => BottomNavigation(),
                       ),
                       (Route<dynamic> route) => false);
                 },
