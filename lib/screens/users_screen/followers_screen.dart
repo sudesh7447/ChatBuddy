@@ -6,6 +6,9 @@ import 'package:chat_buddy/screens/users_screen/user_profile_screen.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/theme_provider.dart';
 
 class FollowersScreen extends StatefulWidget {
   const FollowersScreen({Key? key}) : super(key: key);
@@ -34,24 +37,30 @@ class _FollowersScreenState extends State<FollowersScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
 
     return Scaffold(
-      backgroundColor: kBlueShadeColor,
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
-        backgroundColor: kBlueShadeColor,
+        backgroundColor: kGreenShadeColor,
         title: Text('Followers', style: kSettingComponentAppBarTextStyle),
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 32).copyWith(top: 20),
             child: Stack(
               children: [
                 Container(
                   height: 54,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(27),
-                    color: Colors.grey.shade700.withOpacity(0.3),
+                    color: isDark
+                        ? Colors.grey.shade700.withOpacity(0.3)
+                        : Colors.grey.shade100,
                     border: Border.all(
                         color: Colors.grey.shade700.withOpacity(0.15)),
                   ),
@@ -78,6 +87,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
               ],
             ),
           ),
+          SizedBox(height: 20),
           Expanded(
             child: StreamBuilder(
               stream:
@@ -90,18 +100,25 @@ class _FollowersScreenState extends State<FollowersScreen> {
                 } else if (snapshot.hasData) {
                   final userList = snapshot.data!.docs;
                   if (userList.isEmpty) {
-                    return Container(child: Text('Hello'));
+                    return Center(
+                      child: Text(
+                        '0 Followers',
+                        style: TextStyle(
+                          color: _textColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                        ),
+                      ),
+                    );
                   } else {
                     if (UserModel.followers.isEmpty) {
                       return Center(
-                        child: Container(
-                          child: Text(
-                            '0 Followers',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28,
-                            ),
+                        child: Text(
+                          '0 Followers',
+                          style: TextStyle(
+                            color: _textColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28,
                           ),
                         ),
                       );

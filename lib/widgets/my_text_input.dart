@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyTextInput extends StatefulWidget {
   const MyTextInput({
@@ -26,6 +28,8 @@ class MyTextInput extends StatefulWidget {
 class _MyTextInputState extends State<MyTextInput> {
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
       child: Stack(
@@ -34,23 +38,27 @@ class _MyTextInputState extends State<MyTextInput> {
             height: 54,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(27),
-              color: Colors.grey.shade700.withOpacity(0.3),
+              color: isDark
+                  ? Colors.grey.shade700.withOpacity(0.3)
+                  : Colors.grey.shade100,
               border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
             ),
           ),
           TextFormField(
             style: TextStyle(
-              color: Colors.grey.shade300,
+              color: isDark ? Colors.grey.shade300 : kBlueShadeColor,
               fontSize: 16,
             ),
             decoration: kTextFormFieldAuthDec.copyWith(
               hintText: widget.hintText,
-              prefixIcon: Icon(widget.icon, color: kGreenShadeColor),
-              prefixIconColor: Colors.red,
+              prefixIcon: Icon(
+                widget.icon,
+                color: kGreenShadeColor,
+              ),
               errorStyle: TextStyle(color: kGreenShadeColor),
             ),
             textInputAction: widget.textInputAction,
-            cursorColor: Colors.grey.shade200,
+            cursorColor: isDark ? Colors.grey.shade200 : kBlueShadeColor,
             controller: widget.controller,
             onSaved: (value) {
               widget.controller.value =
@@ -86,6 +94,8 @@ class MyTextInputChat extends StatefulWidget {
 class _MyTextInputChatState extends State<MyTextInputChat> {
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Stack(
@@ -94,13 +104,15 @@ class _MyTextInputChatState extends State<MyTextInputChat> {
             height: 54,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.grey.shade700.withOpacity(0.3),
+              color: isDark
+                  ? Colors.grey.shade700.withOpacity(0.3)
+                  : Colors.grey.shade100,
               border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
             ),
           ),
           TextFormField(
             style: TextStyle(
-              color: Colors.grey.shade300,
+              color: isDark ? Colors.grey.shade300 : Colors.black,
               fontSize: 16,
             ),
             decoration: kTextFormFieldAuthDec.copyWith(
@@ -122,7 +134,9 @@ class _MyTextInputChatState extends State<MyTextInputChat> {
                 ),
               ),
               errorStyle: TextStyle(color: kGreenShadeColor),
-              hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+              hintStyle: TextStyle(
+                color: isDark ? Colors.white.withOpacity(0.5) : Colors.black45,
+              ),
             ),
             textInputAction: TextInputAction.done,
             // maxLines: null,

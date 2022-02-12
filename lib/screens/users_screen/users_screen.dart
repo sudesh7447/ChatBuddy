@@ -9,6 +9,9 @@ import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/theme_provider.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({Key? key}) : super(key: key);
@@ -40,10 +43,13 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+
     return Scaffold(
-      backgroundColor: kBlueShadeColor,
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
-        backgroundColor: kBlueShadeColor,
+        backgroundColor: kGreenShadeColor,
         title: Text('Users', style: kSettingComponentAppBarTextStyle),
       ),
       body: Padding(
@@ -63,6 +69,8 @@ class _UsersScreenState extends State<UsersScreen> {
                 icon: FontAwesomeIcons.users,
                 text: 'All Users',
                 totalUsers: totalUsers,
+                color1: kGreenShadeColor.withOpacity(0.1),
+                color2: kGreenShadeColor,
               ),
             ),
             SizedBox(height: 20),
@@ -79,6 +87,8 @@ class _UsersScreenState extends State<UsersScreen> {
                 icon: FontAwesomeIcons.userPlus,
                 text: 'Followers',
                 totalUsers: UserModel.followers.length,
+                color1: kLightBlueShadeColor.withOpacity(0.1),
+                color2: kLightBlueShadeColor,
               ),
             ),
             SizedBox(height: 20),
@@ -95,6 +105,8 @@ class _UsersScreenState extends State<UsersScreen> {
                 icon: FontAwesomeIcons.userFriends,
                 text: 'Following',
                 totalUsers: UserModel.following.length,
+                color1: Color(0xffE8547C).withOpacity(0.1),
+                color2: Color(0xffE8547C),
               ),
             ),
           ],

@@ -2,13 +2,14 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
-import 'package:chat_buddy/screens/bottom_navigation.dart';
 import 'package:chat_buddy/screens/auth_screen/profile_setup_screen.dart';
 import 'package:chat_buddy/services/get_following.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GetUserData extends StatelessWidget {
   const GetUserData({Key? key}) : super(key: key);
@@ -21,9 +22,13 @@ class GetUserData extends StatelessWidget {
     print(auth.currentUser?.email);
     print('GetUserData');
 
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     return Scaffold(
-      backgroundColor: kBlueShadeColor,
+      backgroundColor: _backgroundColor,
       body: FutureBuilder<DocumentSnapshot>(
         future: users.doc(documentId).get(),
         builder:
@@ -64,9 +69,10 @@ class GetUserData extends StatelessWidget {
             }
           }
           return Center(
-              child: CircularProgressIndicator(
-            color: kGreenShadeColor,
-          ));
+            child: CircularProgressIndicator(
+              color: kGreenShadeColor,
+            ),
+          );
         },
       ),
     );

@@ -15,7 +15,7 @@ class ChatService {
     AssetsAudioPlayer.newPlayer().open(
       Audio("assets/audio/send.mp3"),
       showNotification: false,
-      // volume: 0.5,
+      volume: 0.5,
     );
 
     var timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
@@ -67,7 +67,7 @@ class ChatService {
     AssetsAudioPlayer.newPlayer().open(
       Audio("assets/audio/delete.mp3"),
       showNotification: false,
-      // volume: 0.5,
+      volume: 0.5,
     );
 
     if (!isMsg) {

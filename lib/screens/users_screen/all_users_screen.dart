@@ -3,11 +3,13 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/bottom_navigation.dart';
-import 'package:chat_buddy/screens/chat/select_chat.dart';
 import 'package:chat_buddy/screens/users_screen/user_profile_screen.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/theme_provider.dart';
 
 class AllUsersScreen extends StatefulWidget {
   const AllUsersScreen({Key? key, this.isSelectChatScreen = false})
@@ -39,6 +41,8 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
 
     return WillPopScope(
       onWillPop: () async {
@@ -51,9 +55,9 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
         return Future.value(true);
       },
       child: Scaffold(
-        backgroundColor: kBlueShadeColor,
+        backgroundColor: _backgroundColor,
         appBar: AppBar(
-          backgroundColor: kBlueShadeColor,
+          backgroundColor: kGreenShadeColor,
           title: Text('All Users', style: kSettingComponentAppBarTextStyle),
           leading: InkWell(
             onTap: () {
@@ -72,14 +76,17 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 32).copyWith(top: 20),
               child: Stack(
                 children: [
                   Container(
                     height: 54,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(27),
-                      color: Colors.grey.shade700.withOpacity(0.3),
+                      color: isDark
+                          ? Colors.grey.shade700.withOpacity(0.3)
+                          : Colors.grey.shade100,
                       border: Border.all(
                           color: Colors.grey.shade700.withOpacity(0.15)),
                     ),
@@ -106,6 +113,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                 ],
               ),
             ),
+            SizedBox(height: 20),
             Expanded(
               child: StreamBuilder(
                 stream:
@@ -125,26 +133,31 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                         itemCount: userList.length,
                         itemBuilder: (context, index) {
                           if (resultData(userList, index, searchKey)) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 12),
-                              child: MyContainer3(
-                                imageUrl: userList[index]['Info']['imageUrl'],
-                                text: userList[index]['Info']['fullName'],
-                                friendUid: userList[index]['Info']['uid'],
-                                isFollowStatusRequire: true,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => UserProfileScreen(
-                                        userUid: userList[index]['Info']['uid'],
+                            if (userList[index]['Info']['fullName'] != '') {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 12),
+                                child: MyContainer3(
+                                  imageUrl: userList[index]['Info']['imageUrl'],
+                                  text: userList[index]['Info']['fullName'],
+                                  friendUid: userList[index]['Info']['uid'],
+                                  isFollowStatusRequire: true,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UserProfileScreen(
+                                          userUid: userList[index]['Info']
+                                              ['uid'],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
+                                    );
+                                  },
+                                ),
+                              );
+                            } else {
+                              return Container();
+                            }
                           } else {
                             return SizedBox();
                           }

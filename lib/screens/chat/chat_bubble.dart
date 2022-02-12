@@ -3,8 +3,10 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/services/chat_service.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/theme_provider.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
@@ -23,6 +25,11 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor =
+        !isDark ? kBlueShadeColor.withOpacity(0.5) : Colors.white;
+    Color _textColor = !isDark ? Colors.white : kBlueShadeColor;
+
     void showDialogBoxToDeleteMessage() {
       showDialog(
         context: context,
@@ -111,17 +118,18 @@ class ChatBubble extends StatelessWidget {
                             isSender: isSender,
                             color1: isSender
                                 ? kGreenShadeColor.withRed(10)
-                                : Colors.white,
+                                : _backgroundColor,
                             textStyle: TextStyle(
                               fontSize: 18,
-                              color: isSender ? Colors.white : Colors.black,
+                              color: isSender ? Colors.white : _textColor,
                             ),
                             createdAt: sendAt,
                           )
                         : BubbleImage(
                             isSender: isSender,
                             image: message,
-                            color: isSender ? kGreenShadeColor : Colors.white,
+                            color:
+                                isSender ? kGreenShadeColor : _backgroundColor,
                             createdAt: sendAt,
                           ),
                   ),
@@ -152,6 +160,9 @@ class BubbleText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor = isDark ? Colors.black : Colors.grey.shade100;
+
     return Container(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.7,
@@ -172,7 +183,7 @@ class BubbleText extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8.0, bottom: 4),
             child: Text(
               createdAt,
-              style: TextStyle(color: Colors.black, fontSize: 12),
+              style: TextStyle(color: _textColor, fontSize: 12),
             ),
           ),
         ],

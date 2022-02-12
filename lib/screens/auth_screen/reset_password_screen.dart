@@ -7,6 +7,9 @@ import 'package:chat_buddy/widgets/my_text_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/theme_provider.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({Key? key}) : super(key: key);
@@ -36,13 +39,18 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     bool showSpinner = false;
     final GlobalKey<FormState> _formFieldKey = GlobalKey();
 
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       progressIndicator: CircularProgressIndicator(
         color: kGreenShadeColor,
       ),
       child: Scaffold(
-        backgroundColor: kBlueShadeColor,
+        backgroundColor: _backgroundColor,
         appBar: AppBar(
           backgroundColor: kGreenShadeColor,
           title: Text('Reset Password'),
@@ -54,7 +62,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               Text(
                 'Enter email address',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: _textColor,
                   fontWeight: FontWeight.w500,
                   fontSize: 20,
                 ),

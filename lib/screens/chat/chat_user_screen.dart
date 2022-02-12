@@ -10,7 +10,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../providers/theme_provider.dart';
 
 class ChatUserScreen extends StatefulWidget {
   const ChatUserScreen({Key? key}) : super(key: key);
@@ -121,6 +124,9 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       child: Scaffold(
@@ -140,9 +146,9 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
             },
           ),
         ),
-        backgroundColor: kBlueShadeColor,
+        backgroundColor: _backgroundColor,
         appBar: AppBar(
-          backgroundColor: kBlueShadeColor,
+          backgroundColor: kGreenShadeColor,
           title: Text(
             'ChatBuddy',
             style: TextStyle(
@@ -152,42 +158,43 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-              child: Stack(
-                children: [
-                  Container(
-                    height: 54,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(27),
-                      color: Colors.grey.shade700.withOpacity(0.3),
-                      border: Border.all(
-                        color: Colors.grey.shade700.withOpacity(0.15),
-                      ),
-                    ),
-                  ),
-                  TextFormField(
-                    style: TextStyle(
-                      color: Colors.grey.shade300,
-                      fontSize: 16,
-                    ),
-                    decoration: kTextFormFieldAuthDec.copyWith(
-                      hintText: 'Search User',
-                      prefixIcon: Icon(Icons.search, color: kGreenShadeColor),
-                      prefixIconColor: Colors.red,
-                      errorStyle: TextStyle(color: kGreenShadeColor),
-                    ),
-                    textInputAction: TextInputAction.done,
-                    cursorColor: Colors.grey.shade200,
-                    onChanged: (val) {
-                      setState(() {
-                        searchKey = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+            //   child: Stack(
+            //     children: [
+            //       Container(
+            //         height: 54,
+            //         decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(27),
+            //           color: Colors.grey.shade700.withOpacity(0.3),
+            //           border: Border.all(
+            //             color: Colors.grey.shade700.withOpacity(0.15),
+            //           ),
+            //         ),
+            //       ),
+            //       TextFormField(
+            //         style: TextStyle(
+            //           color: Colors.grey.shade300,
+            //           fontSize: 16,
+            //         ),
+            //         decoration: kTextFormFieldAuthDec.copyWith(
+            //           hintText: 'Search User',
+            //           prefixIcon: Icon(Icons.search, color: kGreenShadeColor),
+            //           prefixIconColor: Colors.red,
+            //           errorStyle: TextStyle(color: kGreenShadeColor),
+            //         ),
+            //         textInputAction: TextInputAction.done,
+            //         cursorColor: Colors.grey.shade200,
+            //         onChanged: (val) {
+            //           setState(() {
+            //             searchKey = val;
+            //           });
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            SizedBox(height: 30),
             Expanded(
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
@@ -211,6 +218,7 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                               .data() as Map<String, dynamic>;
                           String uid1 = data['uid1'].toString();
                           String uid2 = data['uid2'].toString();
+                          print("length");
                           String fNewUid = '', fUid = '';
                           if (uid1 == UserModel.uid) {
                             fNewUid = GenerateUid().newUid(uid1, uid2);
@@ -219,6 +227,8 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                             fNewUid = GenerateUid().newUid(uid1, uid2);
                             fUid = uid1;
                           }
+                          print(fUid);
+
                           if (fUid != '') {
                             return Padding(
                               padding: const EdgeInsets.symmetric(
@@ -327,6 +337,8 @@ class NoChatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
     Size size = MediaQuery.of(context).size;
 
     return SizedBox(
@@ -343,7 +355,7 @@ class NoChatWidget extends StatelessWidget {
                 'Start chat with your friends',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: _textColor,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),

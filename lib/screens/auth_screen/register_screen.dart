@@ -2,8 +2,8 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
-import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:chat_buddy/services/my_user_info.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -52,15 +53,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
 
     return SafeArea(
       child: ModalProgressHUD(
         progressIndicator: CircularProgressIndicator(
-          color: Colors.white,
+          color: kGreenShadeColor,
         ),
         inAsyncCall: showSpinner,
         child: Scaffold(
-          backgroundColor: kBlueShadeColor,
+          backgroundColor: _backgroundColor,
           body: Center(
             child: Column(
               children: [
@@ -94,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           SizedBox(height: size.height * 0.08),
                           Text(
                             'Sign Up',
-                            style: TextStyle(color: Colors.white, fontSize: 28),
+                            style: TextStyle(color: _textColor, fontSize: 28),
                           ),
                           SizedBox(height: 10),
                           Text(
@@ -129,6 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               if (value != passwordController.text) {
                                 return "Confirm password and password doesn't match";
                               }
+                              return null;
                             },
                           ),
                           SizedBox(height: size.height * 0.03),
@@ -153,41 +159,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           SizedBox(height: size.height * 0.03),
                           InkWell(
-                              onTap: () async {
-                                if (_formFieldKey.currentState!.validate()) {
-                                  setState(() {
-                                    showSpinner = true;
-                                  });
-                                  await AuthHelper()
-                                      .signUp(
-                                          email: emailController.text,
-                                          password: passwordController.text)
-                                      .then((result) async {
-                                    if (result == null) {
-                                      await MyUserInfo().storeUserDetails(
-                                          usernameController.text,
-                                          emailController.text,
-                                          passwordController.text);
+                            onTap: () async {
+                              if (_formFieldKey.currentState!.validate()) {
+                                setState(() {
+                                  showSpinner = true;
+                                });
+                                await AuthHelper()
+                                    .signUp(
+                                        email: emailController.text,
+                                        password: passwordController.text)
+                                    .then((result) async {
+                                  if (result == null) {
+                                    await MyUserInfo().storeUserDetails(
+                                        usernameController.text,
+                                        emailController.text,
+                                        passwordController.text);
 
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => GetUserData(),
-                                        ),
-                                      );
-                                    } else {
-                                      setState(() {
-                                        showSpinner = false;
-                                      });
-                                      Fluttertoast.showToast(msg: result);
-                                    }
-                                  });
-                                  setState(() {
-                                    showSpinner = false;
-                                  });
-                                }
-                              },
-                              child: MyButton(text: 'SIGN UP')),
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => GetUserData(),
+                                      ),
+                                    );
+                                  } else {
+                                    setState(() {
+                                      showSpinner = false;
+                                    });
+                                    Fluttertoast.showToast(msg: result);
+                                  }
+                                });
+                                setState(() {
+                                  showSpinner = false;
+                                });
+                              }
+                            },
+                            child: MyButton(text: 'SIGN UP'),
+                          ),
                           SizedBox(height: size.height * 0.08),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

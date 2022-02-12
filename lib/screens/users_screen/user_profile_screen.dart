@@ -5,16 +5,14 @@ import 'package:chat_buddy/providers/follower_provider.dart';
 import 'package:chat_buddy/providers/following_provider.dart';
 import 'package:chat_buddy/screens/bottom_navigation.dart';
 import 'package:chat_buddy/screens/chat/chat_screen.dart';
-import 'package:chat_buddy/screens/users_screen/users_screen.dart';
 import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
 import 'package:chat_buddy/widgets/my_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import '../../providers/theme_provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({Key? key, required this.userUid}) : super(key: key);
@@ -74,6 +72,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     _isFollow =
         Provider.of<FollowerProvider>(context).isFollowing(widget.userUid);
 
@@ -112,7 +114,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         return Future.value(true);
       },
       child: Scaffold(
-        backgroundColor: kBlueShadeColor,
+        backgroundColor: _backgroundColor,
         appBar: AppBar(
           backgroundColor: _isFollow ? kLightBlueShadeColor : kGreenShadeColor,
           title: Text(
@@ -149,7 +151,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     );
                   },
-                  backgroundColor: kBlueShadeColor,
+                  backgroundColor: _backgroundColor,
                   child: Icon(
                     Icons.message_sharp,
                     color: kLightBlueShadeColor,
@@ -174,7 +176,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 SizedBox(height: 20),
                 Text(
                   fullName,
-                  style: TextStyle(color: Colors.white, fontSize: 28),
+                  style: TextStyle(color: _textColor, fontSize: 28),
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -317,6 +319,10 @@ class NewRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor =
+        isDark ? Colors.grey.shade400 : kBlueShadeColor.withOpacity(0.7);
+
     return Padding(
       padding: const EdgeInsets.only(left: 18.0),
       child: Row(
@@ -326,7 +332,7 @@ class NewRow extends StatelessWidget {
           Expanded(
             child: Text(
               property,
-              style: TextStyle(color: Colors.grey.shade400, fontSize: 20),
+              style: TextStyle(color: _textColor, fontSize: 20),
             ),
           ),
         ],

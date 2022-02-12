@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
@@ -20,6 +21,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:path/path.dart' as path;
 import 'package:chat_buddy/widgets/my_text_input.dart';
+import 'package:provider/provider.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({Key? key}) : super(key: key);
@@ -95,7 +97,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
 
     return SafeArea(
       child: ModalProgressHUD(
@@ -115,7 +121,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             return Future.value(true);
           },
           child: Scaffold(
-            backgroundColor: kBlueShadeColor,
+            backgroundColor: _backgroundColor,
             body: Column(
               children: [
                 Padding(
@@ -149,7 +155,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               image: AssetImage('assets/images/profile.png'),
                               alignment: Alignment.center,
                               width: 150,
-                              fit: BoxFit.contain,
+                              height: 150,
+                              fit: BoxFit.cover,
                             ),
                           )
                         : ClipRRect(
@@ -207,27 +214,29 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                   height: 54,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(27),
-                                    color:
-                                        Colors.grey.shade700.withOpacity(0.3),
+                                    color: isDark
+                                        ? Colors.grey.shade700.withOpacity(0.3)
+                                        : Colors.grey.shade100,
                                     border: Border.all(
-                                        color: Colors.grey.shade700
-                                            .withOpacity(0.15)),
+                                      color: Colors.grey.shade700
+                                          .withOpacity(0.15),
+                                    ),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 16.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        FontAwesomeIcons.calendar,
-                                        color: kGreenShadeColor,
-                                      ),
-                                      SizedBox(width: 10),
-                                      InkWell(
-                                        onTap: () {
-                                          pickDate(context);
-                                        },
-                                        child: Text(
+                                  child: InkWell(
+                                    onTap: () {
+                                      pickDate(context);
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          FontAwesomeIcons.calendar,
+                                          color: kGreenShadeColor,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
                                           getDOB(),
                                           style: TextStyle(
                                             color: getDOB() == 'Date of Birth'
@@ -235,8 +244,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                                 : Colors.white,
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],

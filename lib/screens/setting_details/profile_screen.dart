@@ -4,14 +4,12 @@ import 'dart:io';
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/methods/get_dob.dart';
 import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/providers/user_model_provider.dart';
-import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
 import 'package:chat_buddy/screens/update_info_bottom_sheet.dart';
-import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
 import 'package:chat_buddy/services/my_user_info.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
-import 'package:chat_buddy/widgets/my_button.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -71,15 +69,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       progressIndicator: CircularProgressIndicator(
         color: kGreenShadeColor,
       ),
       child: Scaffold(
-        backgroundColor: kBlueShadeColor,
+        backgroundColor: _backgroundColor,
         appBar: AppBar(
-          backgroundColor: kBlueShadeColor,
+          backgroundColor: kGreenShadeColor,
           title: Text('Profile', style: kSettingComponentAppBarTextStyle),
         ),
         body: Center(
@@ -232,30 +233,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     isEmail: true,
                                   ),
                                   SizedBox(height: 30),
-                                  InkWell(
-                                      onTap: () async {
-                                        await AuthHelper().signOut(context);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            backgroundColor: kGreenShadeColor,
-                                            content: Text(
-                                              'Logout Successfully',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        );
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginScreen()),
-                                                (Route<dynamic> route) =>
-                                                    false);
-                                      },
-                                      child: MyButton1(
-                                          text: 'Logout', color: Colors.red))
                                 ],
                               ),
                             ),
@@ -274,6 +251,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<dynamic> buildShowModalBottomSheet(BuildContext context) {
+    bool isDark =
+        Provider.of<ThemeProvider>(context, listen: false).getThemeMode;
+    Color _backgroundColor = isDark
+        ? kBlueShadeColor.withOpacity(0.7)
+        : Colors.grey.withOpacity(0.1);
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     return showModalBottomSheet(
       context: context,
       builder: (builder) {
@@ -285,7 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return Future.value(true);
           },
           child: Container(
-            color: kBlueShadeColor.withOpacity(0.7),
+            color: _backgroundColor,
             height: 200,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -298,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Divider(),
+                Divider(color: Colors.grey),
                 Padding(
                   padding: const EdgeInsets.only(left: 32.0),
                   child: InkWell(
@@ -318,7 +302,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           'Camera',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Colors.white,
+                            color: _textColor,
                           ),
                         ),
                       ],
@@ -326,7 +310,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Divider(),
+                Divider(color: Colors.grey),
                 Padding(
                   padding: const EdgeInsets.only(left: 32.0),
                   child: InkWell(
@@ -346,7 +330,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           'Gallery',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Colors.white,
+                            color: _textColor,
                           ),
                         ),
                       ],
@@ -487,13 +471,16 @@ class SubName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor = isDark ? Colors.grey : kBlueShadeColor;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
           Text(
             subName,
-            style: TextStyle(color: Colors.grey, fontSize: 14),
+            style: TextStyle(color: _textColor, fontSize: 14),
           ),
         ],
       ),

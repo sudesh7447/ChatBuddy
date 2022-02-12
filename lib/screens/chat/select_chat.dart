@@ -3,13 +3,14 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/methods/generate_uid.dart';
 import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/screens/chat/chat_screen.dart';
 import 'package:chat_buddy/screens/users_screen/all_users_screen.dart';
-import 'package:chat_buddy/widgets/my_button.dart';
 import 'package:chat_buddy/widgets/my_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SelectChatScreen extends StatefulWidget {
@@ -40,25 +41,31 @@ class _FollowersScreenState extends State<SelectChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: kBlueShadeColor,
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
-        backgroundColor: kBlueShadeColor,
+        backgroundColor: kGreenShadeColor,
         title: Text('Select Chat', style: kSettingComponentAppBarTextStyle),
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 32).copyWith(top: 30),
             child: Stack(
               children: [
                 Container(
                   height: 54,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(27),
-                    color: Colors.grey.shade700.withOpacity(0.3),
+                    color: isDark
+                        ? Colors.grey.shade700.withOpacity(0.3)
+                        : Colors.grey.shade100,
                     border: Border.all(
                       color: Colors.grey.shade700.withOpacity(0.15),
                     ),
@@ -86,6 +93,7 @@ class _FollowersScreenState extends State<SelectChatScreen> {
               ],
             ),
           ),
+          SizedBox(height: 20),
           Expanded(
             child: (UserModel.following.isEmpty ||
                     (UserModel.following.length == 1 &&
@@ -99,7 +107,7 @@ class _FollowersScreenState extends State<SelectChatScreen> {
                           child: Text(
                             "You don't have any friend",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: _textColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 24,
                             ),
@@ -114,7 +122,7 @@ class _FollowersScreenState extends State<SelectChatScreen> {
                           child: Text(
                             "Follow users to chat with them",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: _textColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 24,
                             ),

@@ -4,8 +4,10 @@ import 'dart:async';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -19,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-      Duration(seconds: 5),
+      Duration(seconds: 4),
       () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
       ),
@@ -28,7 +30,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: kBlueShadeColor, body: SplashTp());
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+
+    return Scaffold(
+      backgroundColor: isDark ? kBlueShadeColor : Colors.white,
+      body: SplashTp(),
+    );
   }
 }
 

@@ -1,17 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:collection';
 import 'dart:io';
-
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/methods/generate_uid.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/bottom_navigation.dart';
 import 'package:chat_buddy/screens/chat/chat_bubble.dart';
-import 'package:chat_buddy/screens/chat/chat_user_screen.dart';
-import 'package:chat_buddy/screens/chat/select_chat.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
-import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/services/chat_service.dart';
 import 'package:chat_buddy/widgets/chat_screen_app_bar.dart';
 import 'package:chat_buddy/widgets/my_text_input.dart';
@@ -19,12 +14,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
+
+import '../../providers/theme_provider.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
@@ -83,6 +80,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       child: WillPopScope(
@@ -96,100 +96,97 @@ class _ChatScreenState extends State<ChatScreen> {
           return Future.value(true);
         },
         child: Scaffold(
-          backgroundColor: kBlueShadeColor,
-          body: Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      ChatScreenAppBar(
-                        uid: widget.friendUid,
-                        imageUrl: widget.imageUrl,
-                        fullName: widget.fullName,
-                      ),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: chatCollection
-                            .doc(newUid)
-                            .collection('messages')
-                            .orderBy('sendAt', descending: true)
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          print("snapshot");
-                          // print(snapshot.data!.docs.length);
-                          if (!snapshot.hasData) {
-                            return Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                    color: kGreenShadeColor,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                          if (snapshot.data != null && snapshot.hasData) {
-                            return Expanded(
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  reverse: true,
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (context, index) {
-                                    Map<String, dynamic> data =
-                                        snapshot.data!.docs[index].data()
-                                            as Map<String, dynamic>;
-
-                                    String sendAt = data['sendAt']
-                                        .toDate()
-                                        .toString()
-                                        .substring(11, 16);
-
-                                    var timestamp = data['timestamp'];
-
-                                    return ChatBubble(
-                                      sendAt: sendAt,
-                                      message: data['msg'],
-                                      isMsg: data['isMsg'],
-                                      isSender: data['senderUid'].toString() ==
-                                          UserModel.uid,
-                                      newUid: newUid,
-                                      timestamp: timestamp,
-                                    );
-                                  },
+          backgroundColor: _backgroundColor,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    ChatScreenAppBar(
+                      uid: widget.friendUid,
+                      imageUrl: widget.imageUrl,
+                      fullName: widget.fullName,
+                    ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: chatCollection
+                          .doc(newUid)
+                          .collection('messages')
+                          .orderBy('sendAt', descending: true)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        print("snapshot");
+                        // print(snapshot.data!.docs.length);
+                        if (!snapshot.hasData) {
+                          return Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  color: kGreenShadeColor,
                                 ),
+                              ],
+                            ),
+                          );
+                        }
+                        if (snapshot.data != null && snapshot.hasData) {
+                          return Expanded(
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                reverse: true,
+                                physics: BouncingScrollPhysics(),
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  Map<String, dynamic> data =
+                                      snapshot.data!.docs[index].data()
+                                          as Map<String, dynamic>;
+
+                                  String sendAt = data['sendAt']
+                                      .toDate()
+                                      .toString()
+                                      .substring(11, 16);
+
+                                  var timestamp = data['timestamp'];
+
+                                  return ChatBubble(
+                                    sendAt: sendAt,
+                                    message: data['msg'],
+                                    isMsg: data['isMsg'],
+                                    isSender: data['senderUid'].toString() ==
+                                        UserModel.uid,
+                                    newUid: newUid,
+                                    timestamp: timestamp,
+                                  );
+                                },
                               ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                MyTextInputChat(
-                  hintText: 'Type a message',
-                  icon: FontAwesomeIcons.camera,
-                  controller: textEditingController,
-                  onImage: () async {
-                    await buildShowModalBottomSheet(context);
-                  },
-                  onSend: () {
-                    ChatService().sendMessage(textEditingController.text, true,
-                        newUid, widget.friendUid, context);
-                    textEditingController.text = '';
-                  },
-                ),
-              ],
-            ),
+              ),
+              MyTextInputChat(
+                hintText: 'Type a message',
+                icon: FontAwesomeIcons.camera,
+                controller: textEditingController,
+                onImage: () async {
+                  await buildShowModalBottomSheet(context);
+                },
+                onSend: () {
+                  ChatService().sendMessage(textEditingController.text, true,
+                      newUid, widget.friendUid, context);
+                  textEditingController.text = '';
+                },
+              ),
+            ],
           ),
         ),
       ),
@@ -197,11 +194,18 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<dynamic> buildShowModalBottomSheet(BuildContext context) {
+    bool isDark =
+        Provider.of<ThemeProvider>(context, listen: false).getThemeMode;
+    Color _backgroundColor = isDark
+        ? kBlueShadeColor.withOpacity(0.7)
+        : Colors.grey.withOpacity(0.1);
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     return showModalBottomSheet(
       context: context,
       builder: (builder) {
         return Container(
-          color: kBlueShadeColor.withOpacity(0.7),
+          color: _backgroundColor,
           height: 200,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -214,7 +218,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              Divider(),
+              Divider(color: Colors.grey),
               Padding(
                 padding: const EdgeInsets.only(left: 32.0),
                 child: InkWell(
@@ -234,7 +238,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         'Camera',
                         style: TextStyle(
                           fontSize: 18,
-                          color: Colors.white,
+                          color: _textColor,
                         ),
                       ),
                     ],
@@ -242,7 +246,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               SizedBox(height: 10),
-              Divider(),
+              Divider(color: Colors.grey),
               Padding(
                 padding: const EdgeInsets.only(left: 32.0),
                 child: InkWell(
@@ -262,7 +266,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         'Gallery',
                         style: TextStyle(
                           fontSize: 18,
-                          color: Colors.white,
+                          color: _textColor,
                         ),
                       ),
                     ],

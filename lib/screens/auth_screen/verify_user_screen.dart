@@ -2,10 +2,12 @@
 
 import 'dart:async';
 import 'package:chat_buddy/helpers/constants.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:chat_buddy/services/get_user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VerifyUserScreen extends StatefulWidget {
   const VerifyUserScreen({Key? key}) : super(key: key);
@@ -39,7 +41,6 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
   @override
   void dispose() {
     timer?.cancel();
-
     super.dispose();
   }
 
@@ -66,10 +67,15 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+
+    Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     return isEmailVerified
         ? GetUserData()
         : Scaffold(
-            backgroundColor: kBlueShadeColor,
+            backgroundColor: _backgroundColor,
             appBar: AppBar(
               title: Text(
                 'Verify Email',
@@ -87,7 +93,7 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
                     child: Text(
                       'A verification email has been send on ${user!.email}',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyle(color: _textColor, fontSize: 20),
                     ),
                   ),
                   SizedBox(height: 30),

@@ -3,10 +3,12 @@
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/providers/follower_provider.dart';
 import 'package:chat_buddy/providers/following_provider.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/verify_user_screen.dart';
 import 'package:chat_buddy/screens/chat/chat_screen.dart';
 import 'package:chat_buddy/services/follow_helper.dart';
 import 'package:chat_buddy/widgets/image_viewer.dart';
+import 'package:chat_buddy/widgets/my_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +23,23 @@ class MyContainer1 extends StatelessWidget {
     required this.icon,
     this.onTap,
     this.totalUsers,
+    this.iconSize = 22,
+    required this.color1,
+    required this.color2,
   }) : super(key: key);
 
   final String text;
   final IconData icon;
   final Function? onTap;
   final int? totalUsers;
+  final double iconSize;
+  final Color color1, color2;
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     Size size = MediaQuery.of(context).size;
 
     String tpUser = text == "Following"
@@ -41,24 +51,31 @@ class MyContainer1 extends StatelessWidget {
     return Container(
       alignment: Alignment.centerLeft,
       width: size.width,
-      height: 55,
+      height: 65,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey.shade500.withOpacity(0.3),
+        color: isDark
+            ? Colors.grey.shade500.withOpacity(0.3)
+            : Colors.grey.withOpacity(0.05),
         border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 24.0, right: 12),
+        padding: const EdgeInsets.only(left: 15.0, right: 15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
-                Icon(icon, color: kGreenShadeColor),
+                MyBox(
+                  color1: color1,
+                  color2: color2,
+                  icon: icon,
+                  iconSize: iconSize,
+                ),
                 SizedBox(width: 15),
                 Text(
                   text,
-                  style: TextStyle(color: Colors.white, fontSize: 19),
+                  style: TextStyle(color: _textColor, fontSize: 19),
                 ),
               ],
             ),
@@ -66,7 +83,11 @@ class MyContainer1 extends StatelessWidget {
               children: [
                 Text(
                   "$totalUsers  $tpUser",
-                  style: TextStyle(color: Colors.white70, fontSize: 18),
+                  style: TextStyle(
+                    color: kLightBlueShadeColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
                 )
               ],
             )
@@ -96,6 +117,9 @@ class MyContainer2 extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     return Container(
       alignment: Alignment.centerLeft,
       width: size.width,
@@ -103,7 +127,9 @@ class MyContainer2 extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey.shade500.withOpacity(0.3),
+        color: isDark
+            ? Colors.grey.shade500.withOpacity(0.3)
+            : Colors.grey.shade50,
         border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
       ),
       child: Padding(
@@ -121,7 +147,10 @@ class MyContainer2 extends StatelessWidget {
                       : MediaQuery.of(context).size.width * 0.6,
                   child: Text(
                     text,
-                    style: TextStyle(color: Colors.white, fontSize: 19),
+                    style: TextStyle(
+                      color: _textColor.withOpacity(0.8),
+                      fontSize: 19,
+                    ),
                   ),
                 ),
               ],
@@ -251,6 +280,9 @@ class _MyContainer3State extends State<MyContainer3> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     if (widget.isFollowStatusRequire) {
       _isFollow =
           Provider.of<FollowerProvider>(context).isFollowing(widget.friendUid);
@@ -264,7 +296,9 @@ class _MyContainer3State extends State<MyContainer3> {
       height: 65,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey.shade500.withOpacity(0.3),
+        color: isDark
+            ? Colors.grey.shade500.withOpacity(0.3)
+            : Colors.grey.withOpacity(0.05),
         border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
       ),
       child: Padding(
@@ -285,7 +319,7 @@ class _MyContainer3State extends State<MyContainer3> {
                     SizedBox(width: 15),
                     Text(
                       widget.text,
-                      style: TextStyle(color: Colors.white, fontSize: 19),
+                      style: TextStyle(color: _textColor, fontSize: 19),
                     ),
                   ],
                 ),
@@ -347,8 +381,7 @@ class _MyContainer4State extends State<MyContainer4> {
       lastMessage = 'Last message';
 
   Future<void> getChatterData() async {
-    var _doc =
-        userCollection.doc(widget.friendUid).get().then((snapshot) async {
+    await userCollection.doc(widget.friendUid).get().then((snapshot) async {
       // print(snapshot.data());
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       setState(() {
@@ -435,6 +468,74 @@ class _MyContainer4State extends State<MyContainer4> {
   }
 }
 
+class MyContainer5 extends StatelessWidget {
+  const MyContainer5({
+    Key? key,
+    required this.text,
+    required this.icon,
+    this.onTap,
+    required this.color1,
+    required this.color2,
+    this.subText = '',
+  }) : super(key: key);
+
+  final String text, subText;
+  final IconData icon;
+  final Function? onTap;
+  final Color color1, color2;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
+    return Container(
+      alignment: Alignment.centerLeft,
+      width: size.width,
+      height: 65,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: isDark
+            ? Colors.grey.shade500.withOpacity(0.3)
+            : Colors.grey.shade50,
+        border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 15.0, right: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                MyBox(
+                  color1: color1,
+                  color2: color2,
+                  icon: icon,
+                ),
+                SizedBox(width: 15),
+                Text(
+                  text,
+                  style: TextStyle(color: _textColor, fontSize: 19),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  subText,
+                  style: TextStyle(color: Colors.red, fontSize: 18),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class MyChatContainer extends StatefulWidget {
   const MyChatContainer({
     Key? key,
@@ -455,6 +556,9 @@ class MyChatContainer extends StatefulWidget {
 class _MyChatContainerState extends State<MyChatContainer> {
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
     String lastMsg = widget.lastMsg;
     int lastMsgLen = widget.lastMsg.length;
 
@@ -470,7 +574,9 @@ class _MyChatContainerState extends State<MyChatContainer> {
         height: 65,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.grey.shade500.withOpacity(0.3),
+          color: isDark
+              ? Colors.grey.shade500.withOpacity(0.3)
+              : Colors.grey.shade100,
           border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
         ),
         child: Padding(
@@ -491,7 +597,7 @@ class _MyChatContainerState extends State<MyChatContainer> {
                       children: [
                         Text(
                           widget.name,
-                          style: TextStyle(color: Colors.white, fontSize: 19),
+                          style: TextStyle(color: _textColor, fontSize: 19),
                         ),
                         SizedBox(height: 5),
                         if (widget.lastMsg != "")
@@ -499,8 +605,12 @@ class _MyChatContainerState extends State<MyChatContainer> {
                             lastMsgLen > 30
                                 ? lastMsg.substring(0, 20) + '...'
                                 : lastMsg,
-                            style: TextStyle(color: Colors.grey.shade400),
-                          )
+                            style: TextStyle(
+                              color: isDark
+                                  ? Colors.grey.shade400
+                                  : Colors.grey.shade500,
+                            ),
+                          ),
                       ],
                     ),
                   ],

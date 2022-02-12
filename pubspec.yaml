@@ -30,12 +30,13 @@ dependencies:
   provider: ^6.0.2
   custom_full_image_screen: ^0.0.4
   cached_network_image: ^3.2.0
-  flutter_local_notifications: ^9.2.0
+  flutter_local_notifications: ^9.3.1
   rxdart: ^0.27.3
   firebase_messaging: ^11.2.6
   shimmer: ^2.0.0
   lottie: ^1.2.1
   assets_audio_player: ^3.0.4+1
+  permission_handler: ^8.3.0
 
 dev_dependencies:
   flutter_test:
