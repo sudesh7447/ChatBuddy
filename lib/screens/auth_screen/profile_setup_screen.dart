@@ -241,7 +241,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                           style: TextStyle(
                                             color: getDOB() == 'Date of Birth'
                                                 ? Colors.grey.shade700
-                                                : Colors.white,
+                                                : isDark
+                                                    ? Colors.white
+                                                    : Colors.black,
                                           ),
                                         ),
                                       ],

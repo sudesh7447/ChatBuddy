@@ -141,7 +141,7 @@ class _MyTextInputChatState extends State<MyTextInputChat> {
             textInputAction: TextInputAction.done,
             // maxLines: null,
             // expands: true,
-            cursorColor: Colors.grey.shade200,
+            cursorColor: isDark ? Colors.grey.shade200 : Colors.black,
             controller: widget.controller,
             onSaved: (value) {
               widget.controller.value =

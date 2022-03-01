@@ -88,7 +88,9 @@ class ChatScreenAppBar extends StatelessWidget {
                         ),
                         SizedBox(width: 15),
                         Text(
-                          fullName,
+                          fullName.length > 15
+                              ? fullName.substring(0, 15) + "..."
+                              : fullName,
                           style: TextStyle(
                             color: _textColor,
                             fontWeight: FontWeight.w600,
