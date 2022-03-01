@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:chat_buddy/api/preferences.dart';
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/providers/follower_provider.dart';
 import 'package:chat_buddy/providers/following_provider.dart';
@@ -14,33 +15,34 @@ import 'package:provider/provider.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
 
+bool isAuthenticated = false;
+bool _theme = false;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await ThemePreferences.init();
 
-  // bool isAuthenticated = await LocalAuthApi.authenticate();
+  _theme = ThemePreferences.getTheme() ?? false;
 
+  print('_theme');
+  print(_theme);
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserModelProvider()),
         ChangeNotifierProvider(create: (_) => FollowingProvider()),
         ChangeNotifierProvider(create: (_) => FollowerProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider(_theme)),
       ],
       child: const MyApp(),
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

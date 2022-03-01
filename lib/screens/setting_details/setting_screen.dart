@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:chat_buddy/api/preferences.dart';
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/providers/user_model_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
@@ -118,25 +119,11 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       SizedBox(height: 15),
                       MyContainer5(
-                        text: 'Fingerprint',
-                        subText: 'Disabled',
-                        icon: Icons.fingerprint_outlined,
-                        color1: Color(0xff45E494).withOpacity(0.2),
-                        color2: Color(0xff45E494),
-                      ),
-                      SizedBox(height: 15),
-                      MyContainer5(
-                        text: 'Change Password',
-                        icon: Icons.password_sharp,
-                        color1: Color(0xff60EEFB).withOpacity(0.2),
-                        color2: Color(0xff60EEFB),
-                      ),
-                      SizedBox(height: 15),
-                      MyContainer5(
                         text: 'Developer Info',
                         icon: Icons.person_rounded,
                         color1: Color(0xffECAF1F).withOpacity(0.2),
                         color2: Color(0xffECAF1F),
+                        onTap: () {},
                       ),
                       SizedBox(height: 35),
                       InkWell(
@@ -209,7 +196,8 @@ class _ThemeContainerState extends State<ThemeContainer> {
     Size size = MediaQuery.of(context).size;
 
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        await ThemePreferences.setTheme(!isDark);
         Provider.of<ThemeProvider>(context, listen: false).changeMode();
       },
       child: Container(

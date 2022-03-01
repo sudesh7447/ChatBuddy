@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -26,24 +25,26 @@ class LocalAuthApi {
     }
   }
 
-  static Future<bool> authenticate() async {
-    final isAvailable = await hasBiometrics();
-    if (!isAvailable) return false;
+  static Future<bool> authenticate(bool isFingerAvailable) async {
+    if (isFingerAvailable) {
+      final isAvailable = await hasBiometrics();
+      if (!isAvailable) return false;
 
-    try {
-      return await _auth.authenticateWithBiometrics(
-        localizedReason: 'Scan Fingerprint to Authenticate',
-        useErrorDialogs: true,
-        stickyAuth: true,
-      );
-    } on PlatformException catch (e) {
-      print(e.code);
-      if (e.code == 'LockedOut') {
-        Fluttertoast.showToast(
-            msg: 'Too many attempts. Try again after 30 seconds.');
+      try {
+        return await _auth.authenticateWithBiometrics(
+          localizedReason: 'Scan Fingerprint to Authenticate',
+          useErrorDialogs: true,
+          stickyAuth: true,
+        );
+      } on PlatformException catch (e) {
+        if (e.code == 'LockedOut') {
+          Fluttertoast.showToast(
+              msg: 'Too many attempts. Try again after 30 seconds.');
+        }
+        return false;
       }
-      return false;
     }
+    return false;
   }
 }
 

@@ -9,4 +9,5 @@ class UserModel {
   static String? uid;
   static List<dynamic> followers = [];
   static List<dynamic> following = [];
+  static bool isChatAvailable = false;
 }

@@ -2,6 +2,7 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
+import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/providers/user_model_provider.dart';
 import 'package:chat_buddy/services/my_user_info.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,14 @@ class UpdateInfoBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     String updatedValue = initialText;
 
+    bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
+    Color _backgroundColor =
+        isDark ? kBlueShadeColor.withOpacity(0.8) : Colors.white;
+
+    Color _textColor = isDark ? Colors.white : Colors.black;
+
     return Container(
-      color: kBlueShadeColor.withOpacity(0.8),
+      color: _backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -46,7 +53,7 @@ class UpdateInfoBottomSheet extends StatelessWidget {
                   print("submitted $val");
                 },
                 initialValue: initialText,
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: _textColor, fontSize: 18),
                 cursorHeight: 20,
                 cursorColor: kGreenShadeColor,
                 autofocus: true,
@@ -103,7 +110,7 @@ class UpdateInfoBottomSheet extends StatelessWidget {
                     child: Text(
                       'Save',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: _textColor,
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                       ),

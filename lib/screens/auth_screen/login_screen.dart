@@ -152,8 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   });
                                   await AuthHelper()
                                       .signIn(
-                                          email: emailController.text,
-                                          password: passwordController.text)
+                                      email: emailController.text,
+                                      password: passwordController.text)
                                       .then((result) {
                                     if (result == null) {
                                       Navigator.pushReplacement(

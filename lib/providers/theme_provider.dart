@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  bool _isDarkMode = false;
+  bool _isDarkMode;
+
+  ThemeProvider(this._isDarkMode);
 
   bool get getThemeMode => _isDarkMode;
 

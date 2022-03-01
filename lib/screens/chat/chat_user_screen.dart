@@ -53,72 +53,40 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
     return userData;
   }
 
-  void showDialogBoxToDeleteChat(fNewUid) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))),
-          actionsPadding: EdgeInsets.only(bottom: 10),
-          title: Text(
-            'Delete Chat',
-            style: TextStyle(color: Colors.black, fontSize: 22),
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 15),
-                InkWell(
-                  onTap: () async {
-                    Navigator.pop(context);
-                    await chatCollection.doc(fNewUid).delete();
-                  },
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-                    child: Text(
-                      'Delete',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
+  Future getChatsOfCurrentUser() async {
+    await chatCollection
+        .where('uid1', isEqualTo: UserModel.uid.toString())
+        .limit(1)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        print(value.docs[0].data());
+        setState(() {
+          UserModel.isChatAvailable = true;
+        });
+      }
+    });
+
+    if (!UserModel.isChatAvailable) {
+      await chatCollection
+          .where('uid2', isEqualTo: UserModel.uid.toString())
+          .limit(1)
+          .get()
+          .then((value) {
+        print(value.docs[0].data());
+
+        setState(() {
+          UserModel.isChatAvailable = true;
+        });
+      });
+    }
   }
 
   bool showSpinner = false;
 
   @override
   void initState() {
+    getChatsOfCurrentUser();
     super.initState();
   }
 
@@ -126,6 +94,8 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
   Widget build(BuildContext context) {
     bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
     Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
+    print("chatAvailable ${UserModel.isChatAvailable}");
+    Size size = MediaQuery.of(context).size;
 
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
@@ -204,9 +174,23 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                       .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) {
-                      return NoChatWidget();
+                      return SizedBox(
+                        height: size.height * 0.7,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                color: kGreenShadeColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                     }
-                    if (snapshot.data!.docs.isEmpty) {
+                    if (snapshot.data!.docs.isEmpty &&
+                        !UserModel.isChatAvailable) {
                       return NoChatWidget();
                     }
                     if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
@@ -218,7 +202,6 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                               .data() as Map<String, dynamic>;
                           String uid1 = data['uid1'].toString();
                           String uid2 = data['uid2'].toString();
-                          print("length");
                           String fNewUid = '', fUid = '';
                           if (uid1 == UserModel.uid) {
                             fNewUid = GenerateUid().newUid(uid1, uid2);
@@ -227,9 +210,9 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                             fNewUid = GenerateUid().newUid(uid1, uid2);
                             fUid = uid1;
                           }
-                          print(fUid);
-
-                          if (fUid != '') {
+                          if (!UserModel.isChatAvailable) {
+                            return NoChatWidget();
+                          } else {
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 24, vertical: 12),
@@ -267,41 +250,34 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                                           );
                                         }
                                         if (snapshot.hasData) {
-                                          return InkWell(
-                                            onLongPress: () {
-                                              showDialogBoxToDeleteChat(
-                                                  fNewUid);
-                                            },
-                                            child: MyChatContainer(
-                                              name: userSnap['Info']
-                                                  ['fullName'],
-                                              imageUrl: userSnap['Info']
-                                                  ['imageUrl'],
-                                              friendUid: fUid,
-                                              lastMsg: snapshot
-                                                      .data!.docs.isNotEmpty
-                                                  ? (snapshot.data!.docs[0]
-                                                          ['isMsg']
-                                                      ? snapshot.data!.docs[0]
-                                                          ['msg']
-                                                      : "Photo")
-                                                  : '',
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ChatScreen(
-                                                      friendUid: fUid,
-                                                      imageUrl: userSnap['Info']
-                                                          ['imageUrl'],
-                                                      fullName: userSnap['Info']
-                                                          ['fullName'],
-                                                    ),
+                                          return MyChatContainer(
+                                            name: userSnap['Info']['fullName'],
+                                            imageUrl: userSnap['Info']
+                                                ['imageUrl'],
+                                            friendUid: fUid,
+                                            lastMsg:
+                                                snapshot.data!.docs.isNotEmpty
+                                                    ? (snapshot.data!.docs[0]
+                                                            ['isMsg']
+                                                        ? snapshot.data!.docs[0]
+                                                            ['msg']
+                                                        : "Photo")
+                                                    : '',
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ChatScreen(
+                                                    friendUid: fUid,
+                                                    imageUrl: userSnap['Info']
+                                                        ['imageUrl'],
+                                                    fullName: userSnap['Info']
+                                                        ['fullName'],
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                ),
+                                              );
+                                            },
                                           );
                                         }
                                         return Container();
@@ -312,8 +288,6 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                                 },
                               ),
                             );
-                          } else {
-                            return Container();
                           }
                         },
                       );
