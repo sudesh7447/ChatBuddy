@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class FollowerProvider extends ChangeNotifier {
   List get followers => UserModel.followers;
-  int get followerLength => UserModel.followers.length;
+  // int get followerLength => UserModel.followers.length;
 
   bool isFollowing(uid) {
     return UserModel.following.contains(uid);

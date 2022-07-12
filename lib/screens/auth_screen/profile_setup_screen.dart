@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/helpers/validators.dart';
+import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/providers/theme_provider.dart';
 import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
@@ -102,6 +103,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
     Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;
     Color _textColor = isDark ? Colors.white : kBlueShadeColor;
+
+    String name = UserModel.username.toString();
 
     return SafeArea(
       child: ModalProgressHUD(

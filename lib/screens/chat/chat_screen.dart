@@ -20,7 +20,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
-
 import '../../providers/theme_provider.dart';
 
 class ChatScreen extends StatefulWidget {
