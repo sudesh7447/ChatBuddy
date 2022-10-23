@@ -2,6 +2,7 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/screens/auth_screen/login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -74,5 +75,28 @@ class AuthHelper {
         ),
       );
     }
+  }
+
+
+//Store Token
+  Future<void> storeToken({token}) async {
+    String _name ="users";
+
+    final CollectionReference userCollection =
+    FirebaseFirestore.instance.collection(_name);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid.toString();
+
+    userCollection
+        .doc(uid)
+        .set({
+      "Info": {
+        "token": token,
+      }
+    }, SetOptions(merge: true))
+        .then((value) => print("User Token Updated"))
+        .catchError((error) => print("Failed to Update Token: $error"));
+
+    return;
   }
 }

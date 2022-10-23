@@ -1,6 +1,7 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
+// import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
+import 'package:chat_buddy/services/send_notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatService {
@@ -11,14 +12,20 @@ class ChatService {
       String msg, bool isMsg, newUid, receiverUid, context) async {
     if (msg == '' && isMsg) return;
 
-    AssetsAudioPlayer.defaultVolume;
-    AssetsAudioPlayer.newPlayer().open(
-      Audio("assets/audio/send.mp3"),
-      showNotification: false,
-      volume: 0.5,
-    );
+    // AssetsAudioPlayer.defaultVolume;
+    // AssetsAudioPlayer.newPlayer().open(
+    //   Audio("assets/audio/send.mp3"),
+    //   showNotification: false,
+    //   volume: 0.5,
+    // );
 
     var timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
+
+    SendNotification().localNotifications(
+        receiverUid: receiverUid,
+        senderName: UserModel.fullName.toString(),
+        notificationMsg: msg,
+        imageUrl: '');
 
     await chatCollection.doc(newUid).collection('messages').doc().set(
       {
@@ -63,12 +70,12 @@ class ChatService {
   }
 
   Future<void> deleteMsg(newUid, msg, isMsg, timestamp) async {
-    AssetsAudioPlayer.defaultVolume;
-    AssetsAudioPlayer.newPlayer().open(
-      Audio("assets/audio/delete.mp3"),
-      showNotification: false,
-      volume: 0.5,
-    );
+    // AssetsAudioPlayer.defaultVolume;
+    // AssetsAudioPlayer.newPlayer().open(
+    //   Audio("assets/audio/delete.mp3"),
+    //   showNotification: false,
+    //   volume: 0.5,
+    // );
 
     if (!isMsg) {
       FirebaseStorageMethods().deleteImage(msg);

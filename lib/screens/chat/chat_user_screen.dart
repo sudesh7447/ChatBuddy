@@ -251,7 +251,7 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                                         }
                                         if (snapshot.hasData) {
                                           return MyChatContainer(
-                                            name: userSnap['Info']['fullName'],
+                                            name: userSnap['Info']['username'].toString(),
                                             imageUrl: userSnap['Info']
                                                 ['imageUrl'],
                                             friendUid: fUid,

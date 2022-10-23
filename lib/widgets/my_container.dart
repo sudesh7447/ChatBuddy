@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/providers/follower_provider.dart';
 import 'package:chat_buddy/providers/following_provider.dart';
@@ -143,8 +145,8 @@ class MyContainer2 extends StatelessWidget {
                 SizedBox(width: 15),
                 SizedBox(
                   width: isEmail
-                      ? MediaQuery.of(context).size.width * 0.55
-                      : MediaQuery.of(context).size.width * 0.6,
+                      ? MediaQuery.of(context).size.width * 0.5
+                      : MediaQuery.of(context).size.width * 0.55,
                   child: Text(
                     text,
                     style: TextStyle(
@@ -596,7 +598,11 @@ class _MyChatContainerState extends State<MyChatContainer> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.name,
+                          widget.name.length > 9
+                              ? widget.name.substring(
+                                      0, min(9, widget.name.length)) +
+                                  '...'
+                              : widget.name,
                           style: TextStyle(color: _textColor, fontSize: 19),
                         ),
                         SizedBox(height: 5),

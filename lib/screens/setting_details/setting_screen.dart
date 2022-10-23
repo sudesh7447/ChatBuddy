@@ -94,7 +94,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     ),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
-                                          0.6,
+                                          0.55,
                                       child: Text(
                                         Provider.of<UserModelProvider>(context)
                                             .bio,

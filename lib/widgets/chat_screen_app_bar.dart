@@ -100,34 +100,6 @@ class ChatScreenAppBar extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => CallScreen(),
-                          //   ),
-                          // );
-                        },
-                        child: Icon(
-                          Icons.phone,
-                          size: 32,
-                          color: kGreenShadeColor,
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      InkWell(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.video_call_outlined,
-                          size: 32,
-                          color: kGreenShadeColor,
-                        ),
-                      )
-                    ],
-                  )
                 ],
               ),
             ),

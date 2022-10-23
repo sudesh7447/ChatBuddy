@@ -48,163 +48,161 @@ class _LoginScreenState extends State<LoginScreen> {
     Size size = MediaQuery.of(context).size;
     bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
 
-    return SafeArea(
-      child: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        progressIndicator: CircularProgressIndicator(
-          color: kGreenShadeColor,
-        ),
-        child: Scaffold(
-          backgroundColor: isDark ? kBlueShadeColor : Colors.white,
-          body: Center(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 38.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Hero(
-                        tag: kHeroTag,
-                        child: Image(
-                          image: AssetImage('assets/images/chat_logo.png'),
-                          width: 70,
-                        ),
+    return ModalProgressHUD(
+      inAsyncCall: showSpinner,
+      progressIndicator: CircularProgressIndicator(
+        color: kGreenShadeColor,
+      ),
+      child: Scaffold(
+        backgroundColor: isDark ? kBlueShadeColor : Colors.white,
+        body: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 38.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Hero(
+                      tag: kHeroTag,
+                      child: Image(
+                        image: AssetImage('assets/images/chat_logo.png'),
+                        width: 70,
                       ),
-                      SizedBox(width: 15),
-                      Text(
-                        'ChatBuddy',
-                        style: TextStyle(color: kGreenShadeColor, fontSize: 30),
-                      ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 15),
+                    Text(
+                      'ChatBuddy',
+                      style: TextStyle(color: kGreenShadeColor, fontSize: 30),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Form(
-                      key: _formFieldKey,
-                      child: Column(
-                        children: [
-                          SizedBox(height: size.height * 0.15),
-                          Text(
-                            'Sign In',
-                            style: TextStyle(
-                              color: isDark ? Colors.white : kBlueShadeColor,
-                              fontSize: 28,
-                            ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Form(
+                    key: _formFieldKey,
+                    child: Column(
+                      children: [
+                        SizedBox(height: size.height * 0.15),
+                        Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: isDark ? Colors.white : kBlueShadeColor,
+                            fontSize: 28,
                           ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Log in using your existing register email id.',
-                            style: TextStyle(color: Colors.grey.shade600),
-                          ),
-                          SizedBox(height: 30),
-                          MyTextInput(
-                            hintText: 'Email id',
-                            icon: Icons.email,
-                            controller: emailController,
-                            validator: emailValidator,
-                          ),
-                          MyTextInput(
-                            hintText: 'Password',
-                            icon: Icons.lock,
-                            controller: passwordController,
-                            validator: passwordRequireValidator,
-                            textInputAction: TextInputAction.done,
-                          ),
-                          SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 32),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                InkWell(
-                                  onTap: () async {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ResetPasswordScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    'Forget Password',
-                                    style: TextStyle(
-                                      color: isDark
-                                          ? Colors.white
-                                          : kBlueShadeColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: size.height * 0.07),
-                          InkWell(
-                              onTap: () async {
-                                if (_formFieldKey.currentState!.validate()) {
-                                  FocusScope.of(context).unfocus();
-
-                                  setState(() {
-                                    showSpinner = true;
-                                  });
-                                  await AuthHelper()
-                                      .signIn(
-                                      email: emailController.text,
-                                      password: passwordController.text)
-                                      .then((result) {
-                                    if (result == null) {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => GetUserData(),
-                                        ),
-                                      );
-                                    } else {
-                                      setState(() {
-                                        showSpinner = false;
-                                      });
-                                      Fluttertoast.showToast(msg: result);
-                                    }
-                                  });
-                                  setState(() {
-                                    showSpinner = false;
-                                  });
-                                }
-                              },
-                              child: MyButton(text: 'SIGN IN')),
-                          SizedBox(height: size.height * 0.1),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'Log in using your existing register email id.',
+                          style: TextStyle(color: Colors.grey.shade600),
+                        ),
+                        SizedBox(height: 30),
+                        MyTextInput(
+                          hintText: 'Email id',
+                          icon: Icons.email,
+                          controller: emailController,
+                          validator: emailValidator,
+                        ),
+                        MyTextInput(
+                          hintText: 'Password',
+                          icon: Icons.lock,
+                          controller: passwordController,
+                          validator: passwordRequireValidator,
+                          textInputAction: TextInputAction.done,
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                "Don't have any account?",
-                                style: TextStyle(color: Colors.grey.shade600),
-                              ),
                               InkWell(
-                                onTap: () {
+                                onTap: () async {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              RegisterScreen()));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ResetPasswordScreen(),
+                                    ),
+                                  );
                                 },
                                 child: Text(
-                                  ' SIGN UP',
-                                  style: TextStyle(color: kGreenShadeColor),
+                                  'Forget Password',
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.white
+                                        : kBlueShadeColor,
+                                  ),
                                 ),
                               ),
                             ],
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                        SizedBox(height: size.height * 0.07),
+                        InkWell(
+                            onTap: () async {
+                              if (_formFieldKey.currentState!.validate()) {
+                                FocusScope.of(context).unfocus();
+
+                                setState(() {
+                                  showSpinner = true;
+                                });
+                                await AuthHelper()
+                                    .signIn(
+                                    email: emailController.text,
+                                    password: passwordController.text)
+                                    .then((result) {
+                                  if (result == null) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => GetUserData(),
+                                      ),
+                                    );
+                                  } else {
+                                    setState(() {
+                                      showSpinner = false;
+                                    });
+                                    Fluttertoast.showToast(msg: result);
+                                  }
+                                });
+                                setState(() {
+                                  showSpinner = false;
+                                });
+                              }
+                            },
+                            child: MyButton(text: 'SIGN IN')),
+                        SizedBox(height: size.height * 0.1),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have any account?",
+                              style: TextStyle(color: Colors.grey.shade600),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            RegisterScreen()));
+                              },
+                              child: Text(
+                                ' SIGN UP',
+                                style: TextStyle(color: kGreenShadeColor),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),

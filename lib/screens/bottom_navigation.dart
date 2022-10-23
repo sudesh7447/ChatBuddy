@@ -5,7 +5,9 @@ import 'package:chat_buddy/models/user_model.dart';
 import 'package:chat_buddy/screens/chat/chat_user_screen.dart';
 import 'package:chat_buddy/screens/setting_details/setting_screen.dart';
 import 'package:chat_buddy/screens/users_screen/users_screen.dart';
+import 'package:chat_buddy/services/auth_helper.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +42,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   void initState() {
     if (widget.idx != -1) _index = widget.idx;
+    FirebaseMessaging.instance.getToken().then((value) {
+      AuthHelper().storeToken(token: value);
+    });
     super.initState();
   }
 

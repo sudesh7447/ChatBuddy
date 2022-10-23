@@ -35,9 +35,11 @@ dependencies:
   firebase_messaging: ^11.2.6
   shimmer: ^2.0.0
   lottie: ^1.2.1
-  assets_audio_player: ^3.0.4+1
+#  assets_audio_player: ^3.0.4+1
   permission_handler: ^8.3.0
   shared_preferences: ^2.0.13
+  flutter_dotenv: ^5.0.2
+
 
 dev_dependencies:
   flutter_test:
@@ -47,8 +49,8 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: true
-  image_path: "assets/images/chat_logo.jpg"
+  ios: truef
+  image_path: "assets/images/chat_logo.png"
 
 flutter:
   uses-material-design: true
@@ -57,4 +59,5 @@ flutter:
     - assets/images/
     - assets/lottie/
     - assets/audio/
+    - .env
 

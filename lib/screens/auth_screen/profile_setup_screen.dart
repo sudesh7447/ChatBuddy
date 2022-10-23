@@ -106,197 +106,195 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
     String name = UserModel.username.toString();
 
-    return SafeArea(
-      child: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        progressIndicator: CircularProgressIndicator(
-          color: kGreenShadeColor,
-        ),
-        child: WillPopScope(
-          onWillPop: () async {
-            await AuthHelper().signOut(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LoginScreen(),
-              ),
-            );
-            return Future.value(true);
-          },
-          child: Scaffold(
-            backgroundColor: _backgroundColor,
-            body: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 32.0, vertical: 16),
-                  child: Row(
-                    children: [
-                      Image(
-                        image: AssetImage('assets/images/chat_logo.png'),
-                        width: 60,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        'Profile Setup',
-                        style: TextStyle(
-                          color: kGreenShadeColor,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                Stack(
+    return ModalProgressHUD(
+      inAsyncCall: showSpinner,
+      progressIndicator: CircularProgressIndicator(
+        color: kGreenShadeColor,
+      ),
+      child: WillPopScope(
+        onWillPop: () async {
+          await AuthHelper().signOut(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ),
+          );
+          return Future.value(true);
+        },
+        child: Scaffold(
+          backgroundColor: _backgroundColor,
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 32.0, vertical: 16),
+                child: Row(
                   children: [
-                    _image == null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(300),
-                            child: Image(
-                              image: AssetImage('assets/images/profile.png'),
-                              alignment: Alignment.center,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(300),
-                            child: Image.file(
-                              _image!,
-                              alignment: Alignment.center,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                    Positioned(
-                      right: 8,
-                      bottom: 15,
-                      child: InkWell(
-                        onTap: () {
-                          buildShowModalBottomSheet(context);
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.camera,
-                          color: kGreenShadeColor,
-                        ),
+                    Image(
+                      image: AssetImage('assets/images/chat_logo.png'),
+                      width: 60,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Profile Setup',
+                      style: TextStyle(
+                        color: kGreenShadeColor,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Form(
-                      key: _formFieldKey,
-                      child: Column(
-                        children: [
-                          SizedBox(height: 60),
-                          MyTextInput(
-                            hintText: 'Full Name',
-                            icon: FontAwesomeIcons.user,
-                            controller: fullNameController,
-                            validator: fullNameValidator,
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+              Stack(
+                children: [
+                  _image == null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(300),
+                          child: Image(
+                            image: AssetImage('assets/images/profile.png'),
+                            alignment: Alignment.center,
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
                           ),
-                          MyTextInput(
-                            hintText: 'About yourself',
-                            icon: FontAwesomeIcons.handPeace,
-                            controller: bioController,
-                            validator: bioValidator,
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(300),
+                          child: Image.file(
+                            _image!,
+                            alignment: Alignment.center,
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 32),
-                            child: Stack(
-                              alignment: Alignment.centerLeft,
-                              children: [
-                                Container(
-                                  height: 54,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(27),
-                                    color: isDark
-                                        ? Colors.grey.shade700.withOpacity(0.3)
-                                        : Colors.grey.shade100,
-                                    border: Border.all(
-                                      color: Colors.grey.shade700
-                                          .withOpacity(0.15),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 16.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      pickDate(context);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          FontAwesomeIcons.calendar,
-                                          color: kGreenShadeColor,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          getDOB(),
-                                          style: TextStyle(
-                                            color: getDOB() == 'Date of Birth'
-                                                ? Colors.grey.shade700
-                                                : isDark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 32.0),
-                            child: InkWell(
-                                onTap: () async {
-                                  print(dob);
-
-                                  if (_formFieldKey.currentState!.validate() &&
-                                      date != null) {
-                                    FocusScope.of(context).unfocus();
-                                    setState(() {
-                                      showSpinner = true;
-                                    });
-
-                                    await uploadImage();
-                                    await MyUserInfo().updateUserDetails(
-                                      fullNameController.text,
-                                      urlDownload,
-                                      bioController.text,
-                                      dob,
-                                    );
-
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => GetUserData(),
-                                      ),
-                                    );
-                                  } else if (date == null) {
-                                    Fluttertoast.showToast(
-                                        msg: 'Select date of birth');
-                                  }
-                                },
-                                child: MyButton(text: 'Done')),
-                          ),
-                        ],
+                        ),
+                  Positioned(
+                    right: 8,
+                    bottom: 15,
+                    child: InkWell(
+                      onTap: () {
+                        buildShowModalBottomSheet(context);
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.camera,
+                        color: kGreenShadeColor,
                       ),
                     ),
                   ),
-                )
-              ],
-            ),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Form(
+                    key: _formFieldKey,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 60),
+                        MyTextInput(
+                          hintText: 'Full Name',
+                          icon: FontAwesomeIcons.user,
+                          controller: fullNameController,
+                          validator: fullNameValidator,
+                        ),
+                        MyTextInput(
+                          hintText: 'About yourself',
+                          icon: FontAwesomeIcons.handPeace,
+                          controller: bioController,
+                          validator: bioValidator,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 32),
+                          child: Stack(
+                            alignment: Alignment.centerLeft,
+                            children: [
+                              Container(
+                                height: 54,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(27),
+                                  color: isDark
+                                      ? Colors.grey.shade700.withOpacity(0.3)
+                                      : Colors.grey.shade100,
+                                  border: Border.all(
+                                    color: Colors.grey.shade700
+                                        .withOpacity(0.15),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    pickDate(context);
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        FontAwesomeIcons.calendar,
+                                        color: kGreenShadeColor,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        getDOB(),
+                                        style: TextStyle(
+                                          color: getDOB() == 'Date of Birth'
+                                              ? Colors.grey.shade700
+                                              : isDark
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 32.0),
+                          child: InkWell(
+                              onTap: () async {
+                                print(dob);
+
+                                if (_formFieldKey.currentState!.validate() &&
+                                    date != null) {
+                                  FocusScope.of(context).unfocus();
+                                  setState(() {
+                                    showSpinner = true;
+                                  });
+
+                                  await uploadImage();
+                                  await MyUserInfo().updateUserDetails(
+                                    fullNameController.text,
+                                    urlDownload,
+                                    bioController.text,
+                                    dob,
+                                  );
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => GetUserData(),
+                                    ),
+                                  );
+                                } else if (date == null) {
+                                  Fluttertoast.showToast(
+                                      msg: 'Select date of birth');
+                                }
+                              },
+                              child: MyButton(text: 'Done')),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),

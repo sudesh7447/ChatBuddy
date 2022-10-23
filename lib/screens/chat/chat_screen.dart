@@ -8,6 +8,7 @@ import 'package:chat_buddy/screens/bottom_navigation.dart';
 import 'package:chat_buddy/screens/chat/chat_bubble.dart';
 import 'package:chat_buddy/services/firebase_upload.dart';
 import 'package:chat_buddy/services/chat_service.dart';
+import 'package:chat_buddy/services/send_notification.dart';
 import 'package:chat_buddy/widgets/chat_screen_app_bar.dart';
 import 'package:chat_buddy/widgets/my_text_input.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -294,6 +295,7 @@ class _ChatScreenState extends State<ChatScreen> {
         _image = imgTemp;
       });
       await uploadImage();
+
       await ChatService().updateMessage(urlDownload, newUid);
     } on PlatformException catch (e) {
       Fluttertoast.showToast(msg: 'Failed to pick image $e');
