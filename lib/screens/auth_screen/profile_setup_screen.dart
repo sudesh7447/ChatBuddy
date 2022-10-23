@@ -126,9 +126,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           backgroundColor: _backgroundColor,
           body: Column(
             children: [
+              SizedBox(height: size.height * 0.1),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 32.0, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Row(
                   children: [
                     Image(
@@ -220,8 +220,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                       ? Colors.grey.shade700.withOpacity(0.3)
                                       : Colors.grey.shade100,
                                   border: Border.all(
-                                    color: Colors.grey.shade700
-                                        .withOpacity(0.15),
+                                    color:
+                                        Colors.grey.shade700.withOpacity(0.15),
                                   ),
                                 ),
                               ),

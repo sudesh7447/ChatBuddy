@@ -641,14 +641,17 @@ class MyChatSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Container(
-      alignment: Alignment.centerLeft,
-      width: size.width,
-      height: 65,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.grey.shade500.withOpacity(0.3),
-        border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 12),
+      child: Container(
+        alignment: Alignment.centerLeft,
+        width: size.width,
+        height: 65,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey.shade500.withOpacity(0.3),
+          border: Border.all(color: Colors.grey.shade700.withOpacity(0.15)),
+        ),
       ),
     );
   }

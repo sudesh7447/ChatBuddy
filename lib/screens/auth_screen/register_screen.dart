@@ -68,25 +68,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
         body: Center(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 38.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Hero(
-                      tag: kHeroTag,
-                      child: Image(
-                        image: AssetImage('assets/images/chat_logo.png'),
-                        width: 70,
-                      ),
+              SizedBox(height: size.height * 0.1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: kHeroTag,
+                    child: Image(
+                      image: AssetImage('assets/images/chat_logo.png'),
+                      width: 70,
                     ),
-                    SizedBox(width: 15),
-                    Text(
-                      'ChatBuddy',
-                      style: TextStyle(color: kGreenShadeColor, fontSize: 30),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 15),
+                  Text(
+                    'ChatBuddy',
+                    style: TextStyle(color: kGreenShadeColor, fontSize: 30),
+                  ),
+                ],
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -123,12 +121,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           icon: Icons.lock,
                           controller: passwordController,
                           validator: passwordValidator,
+                          obscureText: true,
                         ),
                         MyTextInput(
                           hintText: 'Confirm Password',
                           icon: Icons.lock,
                           controller: cPasswordController,
                           textInputAction: TextInputAction.done,
+                          obscureText: true,
                           validator: (value) {
                             if (value != passwordController.text) {
                               return "Confirm password and password doesn't match";

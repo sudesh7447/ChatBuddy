@@ -2,7 +2,7 @@
 
 import 'package:chat_buddy/helpers/constants.dart';
 import 'package:chat_buddy/models/user_model.dart';
-import 'package:chat_buddy/screens/chat/chat_user_screen.dart';
+import 'package:chat_buddy/screens/chat/all_chat_main_screen.dart';
 import 'package:chat_buddy/screens/setting_details/setting_screen.dart';
 import 'package:chat_buddy/screens/users_screen/users_screen.dart';
 import 'package:chat_buddy/services/auth_helper.dart';
@@ -29,7 +29,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int _index = 1;
   List<Widget> screens = [
     UsersScreen(),
-    ChatUserScreen(),
+    AllChatMainScreen(),
     SettingScreen(),
   ];
 

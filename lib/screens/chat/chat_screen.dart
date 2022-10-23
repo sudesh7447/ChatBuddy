@@ -78,7 +78,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
     bool isDark = Provider.of<ThemeProvider>(context).getThemeMode;
     Color _backgroundColor = isDark ? kBlueShadeColor : Colors.white;

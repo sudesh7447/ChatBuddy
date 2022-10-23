@@ -19,7 +19,7 @@ Future<void> getToken(
 
   if (docStatus == true) {
     callOnFcmApiSendPushNotifications([_doc['Info']['token']],
-        msg != '' ? msg : 'Photo', UserModel.username.toString(), imageUrl);
+        msg != '' ? msg : 'Photo', UserModel.fullName.toString(), imageUrl);
     // sender token, description, title
 
   }

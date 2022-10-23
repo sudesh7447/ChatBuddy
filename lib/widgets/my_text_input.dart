@@ -12,7 +12,7 @@ class MyTextInput extends StatefulWidget {
     required this.icon,
     required this.controller,
     required this.validator,
-    this.textInputAction = TextInputAction.next,
+    this.textInputAction = TextInputAction.next,  this.obscureText=false,
   }) : super(key: key);
 
   final String hintText;
@@ -20,6 +20,7 @@ class MyTextInput extends StatefulWidget {
   final TextEditingController controller;
   final FormFieldValidator? validator;
   final TextInputAction textInputAction;
+  final bool obscureText;
 
   @override
   State<MyTextInput> createState() => _MyTextInputState();
@@ -60,6 +61,7 @@ class _MyTextInputState extends State<MyTextInput> {
             textInputAction: widget.textInputAction,
             cursorColor: isDark ? Colors.grey.shade200 : kBlueShadeColor,
             controller: widget.controller,
+            obscureText: widget.obscureText,
             onSaved: (value) {
               widget.controller.value =
                   widget.controller.value.copyWith(text: value);

@@ -58,25 +58,23 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Center(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 38.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Hero(
-                      tag: kHeroTag,
-                      child: Image(
-                        image: AssetImage('assets/images/chat_logo.png'),
-                        width: 70,
-                      ),
+              SizedBox(height: size.height * 0.1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: kHeroTag,
+                    child: Image(
+                      image: AssetImage('assets/images/chat_logo.png'),
+                      width: 70,
                     ),
-                    SizedBox(width: 15),
-                    Text(
-                      'ChatBuddy',
-                      style: TextStyle(color: kGreenShadeColor, fontSize: 30),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 15),
+                  Text(
+                    'ChatBuddy',
+                    style: TextStyle(color: kGreenShadeColor, fontSize: 30),
+                  ),
+                ],
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -111,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: passwordController,
                           validator: passwordRequireValidator,
                           textInputAction: TextInputAction.done,
+                          obscureText: true,
                         ),
                         SizedBox(height: 10),
                         Padding(
@@ -133,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                     color: isDark
                                         ? Colors.white
-                                        : kBlueShadeColor,
+                                        : kLightBlueShadeColor,
                                   ),
                                 ),
                               ),
@@ -151,8 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 });
                                 await AuthHelper()
                                     .signIn(
-                                    email: emailController.text,
-                                    password: passwordController.text)
+                                        email: emailController.text,
+                                        password: passwordController.text)
                                     .then((result) {
                                   if (result == null) {
                                     Navigator.pushReplacement(
