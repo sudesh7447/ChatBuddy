@@ -22,10 +22,11 @@ class ChatService {
     var timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
 
     SendNotification().localNotifications(
-        receiverUid: receiverUid,
-        senderName: UserModel.fullName.toString(),
-        notificationMsg: msg,
-        imageUrl: '');
+      receiverUid: receiverUid,
+      senderName: UserModel.fullName.toString(),
+      notificationMsg: msg,
+      imageUrl: '',
+    );
 
     await chatCollection.doc(newUid).collection('messages').doc().set(
       {
