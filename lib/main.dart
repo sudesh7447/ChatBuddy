@@ -27,11 +27,11 @@ Future<void> _messageHandler(RemoteMessage message) async {
 }
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
-    // description: 'This channel is used for important notifications.', // description
-    importance: Importance.high,
-    playSound: true);
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  importance: Importance.high,
+  playSound: true,
+);
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -59,7 +59,7 @@ Future main() async {
   );
   print('User granted permission: ${settings.authorizationStatus}');
 
-  //Yash
+  // Suyog
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await flutterLocalNotificationsPlugin
@@ -74,13 +74,6 @@ Future main() async {
 
   //Local Notification
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    // print('Got a message whilst in the foreground!');
-    // print('Message data: ${message.data}');
-    //
-    // if (message.notification != null) {
-    //   print('Message also contained a notification: ${message.notification}');
-    // }
-
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
     if (notification != null && android != null) {
@@ -92,7 +85,6 @@ Future main() async {
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
-              // description: channel.description,
               color: Colors.blue,
               playSound: true,
               icon: '@mipmap/ic_launcher',
@@ -156,7 +148,6 @@ class _MyAppState extends State<MyApp> {
         android: AndroidNotificationDetails(
           channel.id,
           channel.name,
-          // description: channel.description,
           color: Colors.blue,
           playSound: true,
           icon: '@mipmap/ic_launcher',
@@ -170,7 +161,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     // showNotification("Hey", "Welcome");
 
-    // print(AppSettings.pushNotification.toString());
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       // print(event.notification!.body);
     });
